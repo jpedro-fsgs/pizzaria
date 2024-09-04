@@ -6,8 +6,17 @@ export interface Product {
   id: number;
   nome: string;
   preco: number;
+  url_imagens: string[];
+  descricao: string;
   adicionais: string[];
+  quantity: number;
 }
+
+export type Categoria = {
+  id: number;
+  nome: string;
+  produtos: Product[];
+};
 
 // Define o tipo do contexto do carrinho
 interface CartContextType {
@@ -17,6 +26,8 @@ interface CartContextType {
   removeItem: (id: number) => void;
   clearCart: () => void;
 }
+
+
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 

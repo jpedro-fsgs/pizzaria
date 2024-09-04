@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ProductCard from "../../components/ProductCard";
+import { Categoria, Product } from "@/CartContext";
 
 const Menu = () => {
-  const [categorias, setCategorias] = useState([]);
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
 
   useEffect(() => {
     axios.get("http://localhost:2130/categorias/").then((response) => {
@@ -26,7 +27,7 @@ const Menu = () => {
                 {categoria.produtos.length === 0 ? (
                   <p>Não há produtos</p>
                 ) : (
-                  categoria.produtos.map((produto) => (
+                  categoria.produtos.map((produto: Product) => (
                     <ProductCard produto={produto} key={produto.id} />
                   ))
                 )}

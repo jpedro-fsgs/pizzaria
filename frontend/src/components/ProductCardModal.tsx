@@ -1,6 +1,6 @@
-/* eslint-disable react/prop-types */
+import { Product } from "@/CartContext";
 
-const ProductCardModal = ({ produto }) => {
+const ProductCardModal = ({ produto }: {produto: Product}) => {
   return (
     <>
       <input
@@ -11,7 +11,7 @@ const ProductCardModal = ({ produto }) => {
       <div className="modal" role="dialog">
         <div className="modal-box">
           <div className="carousel w-full">
-            {produto.url_imagens.map((imagem, index, imagens) => {
+            {produto.url_imagens.map((imagem: string, index: number, imagens: string[]) => {
               return (
                 <div
                   id={"slide" + index}

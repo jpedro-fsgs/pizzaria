@@ -1,9 +1,9 @@
-/* eslint-disable react/prop-types */
 import { FiPlusCircle } from "react-icons/fi";
 import ProductCardModal from "./ProductCardModal";
+import { Product } from "@/CartContext";
 
 
-const ProductCard = ({ produto }) => {
+const ProductCard = ({ produto }: {produto: Product}) => {
   return (
     <div className="bg-base-100 w-80 rounded-lg shadow-xl p-5">
       <ProductCardModal produto={produto} />
