@@ -20,7 +20,7 @@ export default function ShoppingCart({ products }: ShoppingCartProps) {
   const total = products.reduce((acc, product) => acc + product.preco, 0).toFixed(2); // Cálculo do total
 
   return (
-    <div tabIndex={0} className="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-full shadow overflow-y-auto">
+    <div tabIndex={0} className="w-10 card card-compact dropdown-content bg-base-100 z-[1] mt-3 shadow overflow-y-auto">
       <div className="card-body">
         <span className="text-lg font-bold">{products.length} Itens</span>
         {handleSimulateToRenderItems(products)}
