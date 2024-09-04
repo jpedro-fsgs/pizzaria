@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ProductCard from "../../components/ProductCard";
-import { Categoria, Product } from "@/CartContext";
+import { Categoria, Product } from "@/components/types/product";
 
 const Menu = () => {
   const [categorias, setCategorias] = useState<Categoria[]>([]);

@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import logo from "/equipe2/logo.png";
-import ShoppingCartIcon from "../assets/icons";
+import { ShoppingCart as ShoppingCartIcon } from "lucide-react";
 import ShoppingCart from "./ShoppingCart";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -59,7 +59,7 @@ const Header = () => {
             <Dialog>
               <DialogTrigger asChild>
                 <Button size="icon" className="hover:brightness-90 hover:bg-secondary bg-secondary w-10 h-10 md:w-12 md:h-12 transition duration-200" aria-label="Abrir login do usuário">
-                  <User className="h-6 w-6 transition duration-200" aria-hidden="true" />
+                  <User className="h-6 w-6 transition duration-200 text-primary" aria-hidden="true" />
                 </Button>
               </DialogTrigger>
               <DialogContent className="bg-base-100">
