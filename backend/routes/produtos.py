@@ -43,7 +43,7 @@ async def get_produtos(session: Session = Depends(get_session)) -> list[ProdutoR
 @router.post("/cadastrar", response_model=ProdutoResponse)
 async def cadastrar_produto(
         produto_input: CadastrarProduto,
-        user: dict = Depends(is_adm),
+        user: Annotated[dict, Depends(get_current_usuario)],
         session: Session = Depends(get_session)
 ) -> ProdutoResponse:
     """
