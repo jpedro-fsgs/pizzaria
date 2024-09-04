@@ -21,6 +21,7 @@ class PedidoProduto(Base):
     adicionais_pedido = Column(JSON, nullable=True)
     observacoes = Column(String, nullable=True)
     produto_id = Column(Integer, ForeignKey('produto.id'), primary_key=True)
+    tamanho = Column(String, nullable=True)
     quantidade = Column(Integer, nullable=False)
     preco_total = Column(Float, nullable=False)
 
@@ -52,7 +53,7 @@ class Produto(Base):
     id = Column(Integer, primary_key=True)
     nome = Column(String, nullable=False)
     descricao = Column(String, nullable=False)
-    preco = Column(Float, nullable=False)
+    preco = Column(JSON, nullable=False)
     url_imagens = Column(JSON, nullable=False)
     adicionais = Column(JSON, nullable=True)
     id_categoria = Column(Integer, ForeignKey('categoria.id'), nullable=True)

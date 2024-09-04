@@ -5,8 +5,6 @@ import bcrypt
 import jwt
 from database.schema import Usuario
 
-print("oi", jwt.__file__)
-
 ALGORITHM = "HS256"
 JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
 JWT_SECRET_KEY = "aa9dba0d98b3c19aac1b6ec1724c3516d2bcd19f9d43d7798fa669f6c980db0d"

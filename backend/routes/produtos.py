@@ -10,15 +10,15 @@ router = APIRouter()
 from fastapi import Depends, HTTPException, status
 
 
-
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-
 @router.get("/", response_model=list[ProdutoResponse])
-async def get_produtos(session: Session = Depends(get_session)) -> list[ProdutoResponse]:
+async def get_produtos(
+    session: Session = Depends(get_session),
+) -> list[ProdutoResponse]:
     """
     Recupera todos os produtos cadastrados.
 
@@ -42,9 +42,9 @@ async def get_produtos(session: Session = Depends(get_session)) -> list[ProdutoR
 
 @router.post("/cadastrar", response_model=ProdutoResponse)
 async def cadastrar_produto(
-        produto_input: CadastrarProduto,
-        user: Annotated[dict, Depends(get_current_usuario)],
-        session: Session = Depends(get_session)
+    produto_input: CadastrarProduto,
+    user: Annotated[dict, Depends(get_current_usuario)],
+    session: Session = Depends(get_session),
 ) -> ProdutoResponse:
     """
     Cadastra um novo produto.
@@ -65,7 +65,11 @@ async def cadastrar_produto(
         print(not user.get("is_adm"))
         raise HTTPException(status_code=403, detail="Usuário sem permissão.")
 
-    if not session.query(Categoria).filter(Categoria.id == produto_input.id_categoria).first():
+    if (
+        not session.query(Categoria)
+        .filter(Categoria.id == produto_input.id_categoria)
+        .first()
+    ):
         raise HTTPException(status_code=400, detail="Categoria não existe.")
 
     try:
@@ -73,9 +77,11 @@ async def cadastrar_produto(
         produto = Produto(
             nome=produto_input.nome,
             descricao=produto_input.descricao,
-            preco=produto_input.preco,
+            preco=[preco.model_dump() for preco in produto_input.precos],
             url_imagens=produto_input.url_imagens,
-            adicionais=[adicional.model_dump() for adicional in produto_input.adicionais],
+            adicionais=[
+                adicional.model_dump() for adicional in produto_input.adicionais
+            ],
             id_categoria=produto_input.id_categoria,
         )
 
@@ -85,13 +91,12 @@ async def cadastrar_produto(
             id=produto.id,
             nome=produto.nome,
             descricao=produto.descricao,
-            preco=produto.preco,
+            precos=produto.preco,
             url_imagens=produto.url_imagens,
             adicionais=produto.adicionais,
             id_categoria=produto.id_categoria,
             categoria=produto.categoria.nome,
         )
-
 
     except IntegrityError:
         session.rollback()
@@ -104,9 +109,9 @@ async def cadastrar_produto(
 
 @router.put("/editar", response_model=ProdutoResponse)
 async def editar_produto(
-        produto_input: CadastrarProduto,
-        user: Annotated[dict, Depends(get_current_usuario)],
-        session: Session = Depends(get_session)
+    produto_input: CadastrarProduto,
+    user: Annotated[dict, Depends(get_current_usuario)],
+    session: Session = Depends(get_session),
 ) -> ProdutoResponse:
     """
     Edita um produto existente.
@@ -127,7 +132,11 @@ async def editar_produto(
     if not user or not user.get("is_adm"):
         raise HTTPException(status_code=403, detail="Usuário sem permissão.")
 
-    if not session.query(Categoria).filter(Categoria.id == produto_input.id_categoria).first():
+    if (
+        not session.query(Categoria)
+        .filter(Categoria.id == produto_input.id_categoria)
+        .first()
+    ):
         raise HTTPException(status_code=400, detail="Categoria não existe.")
 
     try:

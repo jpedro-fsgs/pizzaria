@@ -49,7 +49,7 @@ async def cadastrar_categoria(
         categoria = Categoria(nome=categoria_input.nome)
         session.add(categoria)
         session.commit()
-        return CategoriaResponse(id=categoria.id, nome=categoria.nome)
+        return CategoriaResponse(id=categoria.id, nome=categoria.nome, produtos=[])
 
     except IntegrityError:
         session.rollback()

@@ -2,6 +2,8 @@ import logging
 from datetime import timedelta
 from typing import Annotated
 
+import jwt
+
 from app.security import autenticar_usuario, criar_token_acesso
 from database.schema import Session, Usuario, get_session
 from fastapi import APIRouter, Depends, HTTPException
@@ -33,7 +35,7 @@ async def login_for_acess_token(form_data: Annotated[OAuth2PasswordRequestForm, 
     if not autenticar_usuario(usuario, form_data.password):
         logger.warning(f"Tentativa de login com senha incorreta para usuário: {form_data.username}")
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=401,
             detail="Usuário ou senha incorretos",
             headers={"WWW-Authenticate": "Bearer"},
         )
@@ -58,5 +60,5 @@ async def get_current_usuario(token: Annotated[str, Depends(oauth2_scheme)]):
 
         return {'username': username, 'id': user_id, 'is_adm': is_adm }
 
-    except jwt.ExpiredSignatureError:
+    except jwt.ExpiredSignatureError as e:
         raise HTTPException(status_code=401, detail="Token expirado")
