@@ -1,5 +1,5 @@
-import { MdOutlineShoppingCart } from "react-icons/md";
+import { ShoppingCart } from "lucide-react";
 
 export default function ShoppingCartIcon() {
-    return <MdOutlineShoppingCart />
+    return <ShoppingCart />
 }

@@ -8,7 +8,6 @@ const Menu = () => {
 
   useEffect(() => {
     axios.get("http://localhost:2130/categorias/").then((response) => {
-      console.log(response);
       setCategorias(response.data);
     });
   }, []);

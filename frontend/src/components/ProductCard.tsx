@@ -6,7 +6,6 @@ import { Product } from "@/CartContext";
 const ProductCard = ({ produto }: {produto: Product}) => {
   return (
     <div className="bg-base-100 w-80 rounded-lg shadow-xl p-5">
-      <ProductCardModal produto={produto} />
       <figure className="m-6 p-2 bg-neutral-content rounded-xl">
         <img
           src={"/pizza-images/" + produto.url_imagens[0]}
@@ -52,12 +51,9 @@ const ProductCard = ({ produto }: {produto: Product}) => {
           <p className="text-2xl font-semibold">
             R$ {produto.preco.toFixed(2)}
           </p>
-          <label htmlFor={"produto-" + produto.id} className="btn btn-lg btn-circle btn-ghost">
-            <FiPlusCircle className="text-primary" size="100%" />
-          </label>
+            <ProductCardModal produto={produto} />
         </div>
       </div>
-      {/* <label htmlFor="my_modal_7" className="btn">open modal</label> */}
     </div>
   );
 };
