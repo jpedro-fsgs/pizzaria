@@ -18,7 +18,7 @@ const Header = () => {
     throw new Error("Header must be used within a CartProvider");
   }
 
-  const { cart } = cartContext;
+  const { cartSize } = cartContext;
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
@@ -48,10 +48,10 @@ const Header = () => {
                   <span className="hidden md:block group-hover:scale-105 text-primary font-semibold">Veja meu carrinho</span>
                   <div className="group-hover:scale-105 indicator">
                     <ShoppingCartIcon className="text-2xl text-primary" aria-hidden="true" />
-                    <span className="badge badge-sm badge-info indicator-item">{cart.reduce((acc, item) => acc + item.quantity, 0)}</span>
+                    <span className="badge badge-sm badge-info indicator-item">{cartSize}</span>
                   </div>
                 </button>
-                <ShoppingCart products={cart} />
+                <ShoppingCart />
               </div>
             </div>
 

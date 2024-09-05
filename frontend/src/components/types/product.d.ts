@@ -20,6 +20,18 @@ export interface Product {
   quantidade: number;
 }
 
+export interface ProductCart {
+  id: number;
+  nome: string;
+  descricao: string;
+  preco: number;
+  tamanho: string;
+  url_imagens: string[];
+  adicionais: string[];
+  id_categoria: number;
+  quantidade: number;
+}
+
 export type Categoria = {
   id: number;
   nome: string;
