@@ -13,9 +13,9 @@ const Menu = () => {
   }, []);
 
   return (
-    <main className="mx-auto w-3/4 space-y-16">
+    <main className="mx-auto w-3/4 py-8 space-y-16">
       <h1 className="text-5xl mt-16">Conheça nosso Menu</h1>
-      <div>
+      <div className="">
         {categorias.map((categoria, index) => {
           return (
             <div key={index}>

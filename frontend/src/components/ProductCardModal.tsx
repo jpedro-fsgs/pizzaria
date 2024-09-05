@@ -7,8 +7,8 @@ import { useState } from "react";
 import ProductAdditionals from "./ProductAdditionals";
 
 const ProductCardModal = ({ produto }: { produto: Product }) => {
-  const [selectedPreco, setSelectedPreco] = useState<number>(0);
-  const precos = [...produto.preco].sort((a, b) => a.preco - b.preco);
+  const [preco, setPreco] = useState<number>(0);
+  const [precoAdicionais, setPrecoAdicionais] = useState<number>(0);
 
   return (
     <Dialog>
@@ -22,16 +22,22 @@ const ProductCardModal = ({ produto }: { produto: Product }) => {
         <PizzaCarousel imagens={produto.url_imagens} />
         <div>
           <div className="flex flex-col items-center text-center space-y-5">
-
             <DialogDescription className="italic max-h-32 overflow-auto">{produto.descricao}</DialogDescription>
 
-            <ProductPrices produto={produto} selectedPreco={selectedPreco} setSelectedPreco={setSelectedPreco} />
+            <ProductPrices produto={produto} preco={preco} setPreco={setPreco} />
 
-            {produto.adicionais.length > 0 && <ProductAdditionals produto={produto} />}
-            
+            {produto.adicionais.length > 0 && <ProductAdditionals produto={produto} setPrecoAdicionais={setPrecoAdicionais} />}
+
             <div className="flex w-full mt-auto items-center justify-between p-4">
-
-              <p className="text-2xl font-semibold">{selectedPreco !== 0 ? `R$ ${selectedPreco}` : precos.length > 1 ? `R$ ${precos[0].preco} - R$ ${precos[precos.length - 1].preco}` : `R$ ${precos[0].preco}`}</p>
+              <p className="text-2xl font-semibold">
+                {
+                preco !== 0 ? 
+                `R$ ${(preco + precoAdicionais).toFixed(2)}` : 
+                produto.preco.length > 1 ? 
+                `R$ ${produto.preco[0].preco.toFixed(2)} - R$ ${produto.preco[produto.preco.length - 1].preco.toFixed(2)}` : 
+                `R$ ${produto.preco[0].preco.toFixed(2)}`
+                }
+              </p>
               <ShoppingCartIcon />
             </div>
           </div>
