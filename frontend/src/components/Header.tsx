@@ -44,7 +44,7 @@ const Header = () => {
 
             <div className="relative">
               <div className="dropdown dropdown-end transition duration-200">
-                <button tabIndex={0} className="group btn btn-secondary flex items-center justify-between md:justify-center focus:outline-none  max-h-7 h-4 min-h-10 md:h-12 pl-2 md:px-3 w-10 md:w-44" aria-label="Abrir carrinho de compras" aria-expanded={isMenuOpen}>
+                <button tabIndex={0} className="group btn btn-secondary flex items-center justify-between md:justify-center focus:outline-none  max-h-7 h-4 min-h-10 md:h-12 pl-2 md:px-3 w-11 md:w-48" aria-label="Abrir carrinho de compras" aria-expanded={isMenuOpen}>
                   <span className="hidden md:block group-hover:scale-105 text-primary font-semibold">Veja meu carrinho</span>
                   <div className="group-hover:scale-105 indicator">
                     <ShoppingCartIcon className="text-2xl text-primary" aria-hidden="true" />
