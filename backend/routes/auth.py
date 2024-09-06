@@ -51,7 +51,6 @@ async def login_for_acess_token(form_data: Annotated[OAuth2PasswordRequestForm, 
 async def get_current_usuario(token: Annotated[str, Depends(oauth2_scheme)]):
     try:
         payload = verifica_token_acesso(token)
-        print(payload)
         username: str = payload.get('sub')
         user_id: int = payload.get('id')
         is_adm: bool = payload.get('is_adm', False)

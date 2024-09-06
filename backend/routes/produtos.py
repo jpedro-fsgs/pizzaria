@@ -30,7 +30,7 @@ async def get_produtos(
             id=produto.id,
             nome=produto.nome,
             descricao=produto.descricao,
-            preco=produto.preco,
+            precos=produto.preco,
             url_imagens=produto.url_imagens,
             adicionais=produto.adicionais,
             id_categoria=produto.id_categoria,

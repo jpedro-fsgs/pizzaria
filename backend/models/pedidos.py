@@ -7,19 +7,20 @@ from models.produtos import Adicional, TamanhoPreco
 class ProdutoPedido(BaseModel):
     id_produto: int
     quantidade: int
-    adicionais: List[Adicional]
-    preco: TamanhoPreco
+    adicionais: List[str]
+    preco: float
+    tamanho: str
 
 class RealizarPedido(BaseModel):
-    id_usuario: int
     produtos: Optional[List[ProdutoPedido]]
 
 class ProdutoPedidoResponse(BaseModel):
     id_produto: int
     nome_produto: str
     quantidade: int
-    preco: TamanhoPreco
-    adicionais: Optional[List[Adicional]]
+    preco: float
+    tamanho: str
+    adicionais: Optional[List[str]]
 
 class PedidoResponse(BaseModel):
     id: int
