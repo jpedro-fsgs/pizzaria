@@ -24,7 +24,6 @@ const ProductCardModal = ({ produto, open, setOpen }: { produto: Product; open: 
   const { addItem } = cartContext;
 
   const handleAddProdutoToCart = () => {
-    if(preco === 0) return;
     addItem({
       id: produto.id,
       nome: produto.nome,
@@ -59,7 +58,7 @@ const ProductCardModal = ({ produto, open, setOpen }: { produto: Product; open: 
 
             <div className="sm:flex max-sm:space-y-5 w-full mt-auto items-center justify-between p-4">
               <p className="text-2xl font-semibold">{preco !== 0 ? `R$ ${(preco + precoAdicionais).toFixed(2)}` : produto.preco.length > 1 ? `R$ ${produto.preco[0].preco.toFixed(2)} - R$ ${produto.preco[produto.preco.length - 1].preco.toFixed(2)}` : `R$ ${produto.preco[0].preco.toFixed(2)}`}</p>
-              <button className="btn" onClick={handleAddProdutoToCart}>
+              <button className="btn" onClick={handleAddProdutoToCart} disabled={preco === 0}>
                 <p>Adicionar</p>
                 <ShoppingCartIcon />
               </button>

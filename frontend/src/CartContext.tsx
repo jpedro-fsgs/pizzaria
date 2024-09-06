@@ -7,6 +7,7 @@ import { ProductCart } from "./components/types/product";
 interface CartContextType {
   cart: ProductCart[];
   cartSize: number;
+  cartTotal: number;
   addItem: (product: ProductCart) => void;
   editItem: (product: ProductCart, quantity: number) => void;
   removeItem: (product: ProductCart) => void;
@@ -24,6 +25,7 @@ interface CartProviderProps {
 export const CartProvider = ({ children }: CartProviderProps) => {
   const [cart, setCart] = useState<ProductCart[]>([]);
   const [cartSize, setCartSize] = useState<number>(0);
+  const [cartTotal, setCartTotal] = useState<number>(0);
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -32,6 +34,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
   useEffect(() => {
     setCartSize(cart.reduce((acc, item) => acc + item.quantidade, 0));
+    setCartTotal(cart.reduce((acc, product) => acc + product.preco * product.quantidade, 0))
     if(cart.length === 0){
       return;
     }
@@ -64,5 +67,5 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     localStorage.setItem("cart", JSON.stringify([]));
   };
 
-  return <CartContext.Provider value={{ cart, addItem, editItem, removeItem, clearCart, cartSize }}>{children}</CartContext.Provider>;
+  return <CartContext.Provider value={{ cart, addItem, editItem, removeItem, clearCart, cartSize, cartTotal }}>{children}</CartContext.Provider>;
 };

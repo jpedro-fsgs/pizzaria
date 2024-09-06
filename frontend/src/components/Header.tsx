@@ -21,7 +21,7 @@ const Header = () => {
   return (
     <>
       <header className="bg-primary w-full shadow">
-        <div className="container mx-auto flex items-center justify-between px-4 py-4 md:px-6">
+        <div className="container mx-auto flex items-center justify-between px-4 py-1 md:px-6">
           <Link to="/" aria-label="Voltar para a página inicial" className="w-24 hover:scale-105 transition duration-200">
             <img src={logo} alt="Logo da Borcelle Pizzaria, link para a página inicial" className="rounded-full" />
           </Link>

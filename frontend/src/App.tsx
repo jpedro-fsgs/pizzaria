@@ -6,6 +6,7 @@ import About from "./pages/About";
 import { CartProvider } from "./CartContext";
 import Footer from "./components/Footer";
 import Menu from "./pages/Menu";
+import Payment from "./pages/Payment";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/menu" element={<Menu />} />
+          <Route path="/payment" element={<Payment />} />
         </Routes>
         <Footer />
       </CartProvider>
