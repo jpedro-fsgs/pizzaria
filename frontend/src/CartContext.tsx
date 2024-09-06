@@ -59,6 +59,10 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   };
 
   const removeItem = (product: ProductCart) => {
+    if(cartSize === 1){
+      clearCart();
+      return;
+    }
     setCart((prevCart) => prevCart.filter((item) => !(item.id === product.id && item.tamanho === product.tamanho && JSON.stringify(item.adicionais) === JSON.stringify(product.adicionais))));
   };
 
