@@ -7,20 +7,25 @@ import { CartProvider } from "./CartContext";
 import Footer from "./components/Footer";
 import Menu from "./pages/Menu";
 import Payment from "./pages/Payment";
+import { UserProvider } from "./UserContext";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
     <BrowserRouter>
-      <CartProvider>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/menu" element={<Menu />} />
-          <Route path="/payment" element={<Payment />} />
-        </Routes>
-        <Footer />
-      </CartProvider>
+      <UserProvider>
+        <CartProvider>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/payment" element={<Payment />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+          <Footer />
+        </CartProvider>
+      </UserProvider>
     </BrowserRouter>
   );
 }

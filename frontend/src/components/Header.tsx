@@ -5,6 +5,8 @@ import ShoppingCart from "./ShoppingCart";
 import { Link } from "react-router-dom";
 import { CartContext } from "../CartContext";
 import Login from "./Login";
+import { UserContext } from "@/UserContext";
+import ProfileButton from "./ProfileButton";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,6 +19,14 @@ const Header = () => {
   const { cartSize } = cartContext;
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
+  const userContext = useContext(UserContext);
+
+  if (!userContext) {
+    throw new Error("Header must be used within a UserProvider");
+  }
+
+  const { isLogged } = userContext;
 
   return (
     <>
@@ -52,7 +62,7 @@ const Header = () => {
             </div>
 
             {/* Ícone do usuário */}
-            <Login />
+            {isLogged ? <ProfileButton /> : <Login />}
       
             {/* Botão para abrir/fechar menu mobile */}
             <button className="text-secondary text-3xl md:hidden focus:outline-none" onClick={toggleMenu} aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={isMenuOpen}>
