@@ -1,10 +1,13 @@
 from datetime import timedelta
+from typing import Annotated
 
 from app.security import get_hashed_senha, criar_token_acesso
 from database.schema import Usuario, get_session, Session
 from fastapi import APIRouter, Depends, HTTPException
 from models import CadastroUsuario, UsuarioResponse, UsuarioResponseToken
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+
+from routes.auth import get_current_usuario
 
 
 router = APIRouter()
@@ -25,6 +28,21 @@ async def get_usuarios(session: Session = Depends(get_session)):
     ]
 
 
+@router.get("/atual")
+async def get_usuario_atual(
+    user: Annotated[dict, Depends(get_current_usuario)],
+    session: Session = Depends(get_session),
+):
+    usuario = session.query(Usuario).filter(Usuario.id == user["id"]).first()
+    return UsuarioResponse(
+        id=usuario.id,
+        nome=usuario.nome,
+        telefone=usuario.telefone,
+        endereco=usuario.endereco,
+        email=usuario.email,
+    )
+
+
 @router.post("/cadastrar")
 async def cadastrar_usuario(
     usuario_input: CadastroUsuario, session: Session = Depends(get_session)
@@ -43,7 +61,9 @@ async def cadastrar_usuario(
         session.commit()
 
         # Gerar o token após o usuário ser salvo com sucesso
-        token = criar_token_acesso(usuario.email, usuario.id, usuario.adm, timedelta(minutes=20))
+        token = criar_token_acesso(
+            usuario.email, usuario.id, usuario.adm, timedelta(minutes=20)
+        )
     except IntegrityError:
         raise HTTPException(status_code=409, detail="Email já cadastrado")
     except SQLAlchemyError as e:
@@ -58,5 +78,5 @@ async def cadastrar_usuario(
         telefone=usuario.telefone,
         endereco=usuario.endereco,
         email=usuario.email,
-        token={"access_token": token, "token_type": "bearer"}
+        token={"access_token": token, "token_type": "bearer"},
     )

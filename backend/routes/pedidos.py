@@ -142,7 +142,6 @@ async def get_pedidos_usuario(
 @router.post("/cadastrar")
 async def cadastrar_pedido(
     pedido_input: RealizarPedido,
-    # background_tasks: BackgroundTasks,
     user: Annotated[dict, Depends(get_current_usuario)],
     session: Session = Depends(get_session),
 ):
