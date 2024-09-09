@@ -3,7 +3,7 @@ import ProductCardModal from "./ProductCardModal";
 import { Product } from "./types/product";
 
 const ProductCard = ({ produto }: { produto: Product }) => {
-    const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   return (
     <div onDoubleClick={() => setOpen(true)} className="bg-base-100 w-80 rounded-lg shadow-xl p-5 hover:scale-[1.01] hover:outline outline-base-200">
       <figure className="m-6 p-2 bg-neutral-content rounded-xl">
@@ -13,7 +13,7 @@ const ProductCard = ({ produto }: { produto: Product }) => {
         <h2 className="text-3xl font-normal text-primary">{produto.nome}</h2>
 
         <p className="text-2xl font-semibold">{produto.preco.length > 1 ? `R$ ${produto.preco[0].preco.toFixed(2)} - R$ ${produto.preco[produto.preco.length - 1].preco.toFixed(2)}` : `R$ ${produto.preco[0].preco.toFixed(2)}`}</p>
-        <ProductCardModal produto={produto} open={open} setOpen={setOpen}/>
+        <ProductCardModal produto={produto} open={open} setOpen={setOpen} />
       </div>
     </div>
   );

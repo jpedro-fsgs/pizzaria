@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User } from "lucide-react";
 
 const Login = () => {
+  
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -25,7 +26,7 @@ const Login = () => {
             <form className="space-y-4">
               <Input placeholder="Email" type="email" required />
               <Input placeholder="Senha" type="password" required />
-              <Button className="w-full">Logar</Button>
+              <Button className="w-full text-slate-100">Logar</Button>
             </form>
           </TabsContent>
           <TabsContent value="signup">
@@ -34,7 +35,7 @@ const Login = () => {
               <Input placeholder="Email" type="email" required />
               <Input placeholder="Senha" type="password" required />
               <Input placeholder="Confirme a Senha" type="password" required />
-              <Button className="w-full">Registrar</Button>
+              <Button className="w-full text-slate-100">Registrar</Button>
             </form>
           </TabsContent>
         </Tabs>

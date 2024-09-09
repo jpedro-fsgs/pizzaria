@@ -1,5 +1,5 @@
 // CartContext.tsx
-import React, { createContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useState, useEffect, ReactNode } from "react";
 import { ProductCart } from "./components/types/product";
 
 
