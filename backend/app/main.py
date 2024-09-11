@@ -1,7 +1,7 @@
 import logging
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from routes import (
     produtos_router,
@@ -28,15 +28,16 @@ logging.basicConfig(
 
 app = FastAPI(title="Pizzaria Hackaton")
 
+allowed_origins = os.environ.get('ALLOWED_ORIGINS').split(',')
+
 # Configuração de CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # podemos adicicionar a rota do front dps
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # Incluir os routers com prefixos e tags
 routers = [

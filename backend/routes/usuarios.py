@@ -16,6 +16,7 @@ router = APIRouter()
 @router.get("/")
 async def get_usuarios(session: Session = Depends(get_session)):
     usuarios = session.query(Usuario).all()
+    print(usuarios[0].endereco)
     return [
         UsuarioResponse(
             id=usuario.id,
@@ -23,6 +24,7 @@ async def get_usuarios(session: Session = Depends(get_session)):
             telefone=usuario.telefone,
             endereco=usuario.endereco,
             email=usuario.email,
+            adm=usuario.adm
         )
         for usuario in usuarios
     ]
@@ -40,6 +42,7 @@ async def get_usuario_atual(
         telefone=usuario.telefone,
         endereco=usuario.endereco,
         email=usuario.email,
+        adm=usuario.adm
     )
 
 
@@ -53,7 +56,7 @@ async def cadastrar_usuario(
         usuario = Usuario(
             nome=usuario_input.nome,
             telefone=usuario_input.telefone,
-            endereco=usuario_input.endereco,
+            endereco=usuario_input.endereco.model_dump(),
             email=usuario_input.email,
             hashed_senha=get_hashed_senha(usuario_input.senha),
         )
@@ -68,7 +71,9 @@ async def cadastrar_usuario(
         raise HTTPException(status_code=409, detail="Email já cadastrado")
     except SQLAlchemyError as e:
         session.rollback()
-        raise HTTPException(status_code=500, detail="Erro ao cadastrar usuário")
+        raise HTTPException(status_code=500, detail="Erro ao cadastrar usuário: " + str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         session.close()
 
