@@ -14,8 +14,8 @@ function PizzaCarousel({ imagens }: { imagens: string[] }) {
       </CarouselContent>
       {imagens.length > 1 && (
         <>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious className="max-md:translate-x-10" />
+          <CarouselNext className="max-md:-translate-x-10" />
         </>
       )}
     </Carousel>

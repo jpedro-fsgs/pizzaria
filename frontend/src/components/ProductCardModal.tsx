@@ -43,7 +43,7 @@ const ProductCardModal = ({ produto, open, setOpen }: { produto: Product; open: 
       <DialogTrigger className="btn btn-lg btn-circle btn-ghost">
         <CirclePlus className="text-primary" size="100%" />
       </DialogTrigger>
-      <DialogContent className="bg-base-100">
+      <DialogContent className="bg-base-100 max-md:w-[90vw] rounded-lg">
         <DialogHeader>
           <DialogTitle className="text-3xl font-normal text-primary">{produto.nome}</DialogTitle>
         </DialogHeader>
