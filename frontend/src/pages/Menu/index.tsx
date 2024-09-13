@@ -4,45 +4,41 @@ import ProductCard from "../../components/ProductCard";
 import { Categoria, Product } from "@/components/types/product";
 import { Skeleton } from "@/components/ui/skeleton";
 import ProductCardSkeleton from "@/components/ProductCardSkeleton";
+import { useQuery } from "react-query";
+
+const fetchCategorias = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 3000)); // Simula atraso
+  const { data } = await axios.get("http://localhost:2130/categorias/");
+  return data;
+};
 
 const Menu = () => {
-  const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data: categorias, error, isLoading } = useQuery(["categorias"], fetchCategorias);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      axios
-        .get("http://localhost:2130/categorias/")
-        .then((response) => {
-          setCategorias(response.data);
-        })
-        .catch((error) => {
-          console.error(error);
-          alert("Não foi possível conectar ao servidor");
-        })
-        .finally(() => setLoading(false));
-    };
-
-    fetchData();
-  }, []);
+  if (error) {
+    console.log("erroxxxx");
+    return (
+      <main className="mx-auto py-8 space-y-16">
+        <h1 className="text-5xl text-center mt-16 mx-16">Não foi possível conectar ao servidor</h1>
+      </main>
+    );
+  }
 
   return (
     <main className="mx-auto py-8 space-y-16">
       <h1 className="text-5xl mt-16 mx-16">Conheça nosso Menu</h1>
-      <div className="">
-        {loading ? (
+      <div>
+        {isLoading ? (
           <>
-            <h2 className="text-primary text-5xl font-bold m-16">{<Skeleton className="h-16 w-96 bg-neutral-content" />}</h2>
+            <h2 className="text-primary text-5xl font-bold m-16">{<Skeleton className="h-16 max-w-96 bg-neutral-content" />}</h2>
             <div className="flex flex-wrap justify-center gap-5">
-              {Array.from({length: Math.floor(Math.random() * 4) + 4}).map((_, index) => (
+              {Array.from({ length: Math.floor(Math.random() * 4) + 4 }).map((_, index) => (
                 <ProductCardSkeleton key={index} />
               ))}
             </div>
           </>
         ) : (
-          categorias.map((categoria, index) => {
+          categorias.map((categoria: Categoria, index: number) => {
             return (
               <div key={index}>
                 <h2 className="text-primary text-5xl font-bold m-16">{categoria.nome}</h2>
