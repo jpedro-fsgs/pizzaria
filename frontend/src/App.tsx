@@ -1,4 +1,5 @@
 import { Route, BrowserRouter, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import Home from "./pages/Home";
 import Header from "./components/Header";
@@ -10,23 +11,29 @@ import Payment from "./pages/Payment";
 import { UserProvider } from "./UserContext";
 import Profile from "./pages/Profile";
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <BrowserRouter>
-      <UserProvider>
-        <CartProvider>
-          <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/menu" element={<Menu />} />
-            <Route path="/payment" element={<Payment />} />
-            <Route path="/profile" element={<Profile />} />
-          </Routes>
-          <Footer />
-        </CartProvider>
-      </UserProvider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <UserProvider>
+          <CartProvider>
+            <Header />
+            <main className="min-h-[66.9vh]">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/menu" element={<Menu />} />
+                <Route path="/payment" element={<Payment />} />
+                <Route path="/profile" element={<Profile />} />
+              </Routes>
+            </main>
+            <Footer />
+          </CartProvider>
+        </UserProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 
