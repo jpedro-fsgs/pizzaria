@@ -29,7 +29,7 @@ const index = () => {
           <TabsTrigger value="meu-perfil">Meu Perfil</TabsTrigger>
           <TabsTrigger value="endereco">Endereço</TabsTrigger>
           <TabsTrigger value="meus-pedidos">Meus Pedidos</TabsTrigger>
-          <Button className="btn btn-xs text-base-100" onClick={logout}>Logout</Button>
+          {/* <Button className="btn btn-xs text-base-100" onClick={logout}>Logout</Button> */}
         </TabsList>
         <TabsContent value="meu-perfil">
           <MeuPerfilTab user={userContext} />
