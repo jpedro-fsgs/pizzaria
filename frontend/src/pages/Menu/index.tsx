@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 import ProductCard from "../../components/ProductCard";
 import { Categoria, Product } from "@/components/types/product";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -16,7 +15,7 @@ const Menu = () => {
   const { data: categorias, error, isLoading } = useQuery(["categorias"], fetchCategorias);
 
   if (error) {
-    console.log("erroxxxx");
+    console.error(error)
     return (
       <main className="mx-auto py-8 space-y-16">
         <h1 className="text-5xl text-center mt-16 mx-16">Não foi possível conectar ao servidor</h1>

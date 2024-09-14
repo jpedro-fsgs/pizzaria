@@ -1,7 +1,9 @@
 import { UserContextType } from "@/UserContext";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import LoadingIcon from "./ui/loading";
+import { Skeleton } from "./ui/skeleton";
 
 interface Pedido {
   id: number;
@@ -45,20 +47,22 @@ const MeusPedidosTab = ({ user }: { user: UserContextType }) => {
 
   return (
     <div className="md:w-3/4 max-h-[60vh] mx-auto rounded-lg overflow-y-auto">
-      {isLoading || !meusPedidos ? (
-        <p>carregando</p>
-      ) : (
-        <Table className="bg-slate-100 table-zebra max-sm:text-center">
-          <TableHeader className="bg-primary text-secondary">
-            <TableRow>
-              <TableHead className="text-left">Data</TableHead>
-              <TableHead className="text-center">Produtos</TableHead>
-              <TableHead className="text-right">Total</TableHead>
+      <Table className="bg-slate-100 table-zebra max-sm:text-center">
+        <TableHeader className="bg-primary text-secondary">
+          <TableRow>
+            <TableHead className="text-left">Data</TableHead>
+            <TableHead className="text-center">Produtos</TableHead>
+            <TableHead className="text-right">Total</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody className=" overflow-y-auto">
+          {isLoading || !meusPedidos ? (
+            <TableRow className="p-5">
+              <TableCell className="flex items-center gap-2 text-lg"><LoadingIcon /> Carregando...</TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody className=" overflow-y-auto">
-            {meusPedidos.map((pedido) => (
-              <TableRow className="rounded" key={pedido.id}>
+          ) : (
+            meusPedidos.map((pedido) => (
+              <TableRow key={pedido.id}>
                 <TableCell>
                   <p>{new Date(pedido.horario_pedido).toLocaleDateString("pt-BR")}</p>
                   <p>{new Date(pedido.horario_pedido).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</p>
@@ -70,8 +74,8 @@ const MeusPedidosTab = ({ user }: { user: UserContextType }) => {
                       <span className="text-sm italic"> {produto.tamanho}</span>
                       <span className="text-sm italic"> x{produto.quantidade}</span>
                       <ul className="list-inside list-disc">
-                        {produto.adicionais.map((adicional) => (
-                          <li>{adicional}</li>
+                        {produto.adicionais.map((adicional, index) => (
+                          <li key={index}>{adicional}</li>
                         ))}
                       </ul>
                     </div>
@@ -81,10 +85,10 @@ const MeusPedidosTab = ({ user }: { user: UserContextType }) => {
                   <h2>R$ {pedido.total.toFixed(2)}</h2>
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
+            ))
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 };

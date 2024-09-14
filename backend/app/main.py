@@ -1,7 +1,7 @@
 import logging
 import os
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes import (
     produtos_router,
@@ -29,7 +29,6 @@ logging.basicConfig(
 app = FastAPI(title="Pizzaria Hackaton")
 
 allowed_origins = os.environ.get('ALLOWED_ORIGINS').split(',')
-
 # Configuração de CORS
 app.add_middleware(
     CORSMiddleware,
