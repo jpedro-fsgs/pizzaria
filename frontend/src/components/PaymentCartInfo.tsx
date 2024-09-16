@@ -17,12 +17,12 @@ const PaymentCartInfo = () => {
   };
 
   return (
-    <div className="flex w-1/4 min-h-full px-2 py-5">
-      <Separator className="bg-primary h-full" orientation="vertical" />
-      <div className="mx-4 my-auto space-y-14 ">
+    <div className="flex md:w-1/4 min-h-full my-4">
+      <Separator className="bg-primary h-full max-md:hidden" orientation="vertical" />
+      <div className="mx-auto my-auto space-y-14 ">
         <h2 className="text-3xl text-left">Total:</h2>
         <h2 className="text-2xl text-center">R$ {cartTotal.toFixed(2)}</h2>
-        <Button className="text-secondary btn-wide" disabled={cartSize < 1}>Realizar Pedido</Button>
+        <Button className="text-secondary btn btn-md" disabled={cartSize < 1}>Realizar Pedido</Button>
       </div>
     </div>
   );

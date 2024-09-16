@@ -15,7 +15,7 @@ const Payment = () => {
 
 
   return (
-    <main className="flex gap-5 p-2">
+    <main className="md:flex gap-5 p-2">
         {cartSize > 0 ? <PaymentCartTable /> : <h2 className="w-full text-center mt-36">Não há itens</h2>}
         <PaymentCartInfo />
     </main>
