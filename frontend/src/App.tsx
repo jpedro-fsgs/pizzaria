@@ -10,6 +10,7 @@ import Menu from "./pages/Menu";
 import Payment from "./pages/Payment";
 import { UserProvider } from "./UserContext";
 import Profile from "./pages/Profile";
+import { Toaster } from "./components/ui/sonner";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
               </Routes>
             </main>
+            <Toaster />
             <Footer />
           </CartProvider>
         </UserProvider>
