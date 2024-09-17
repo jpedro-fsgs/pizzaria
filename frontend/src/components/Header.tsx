@@ -1,12 +1,13 @@
 import { useContext, useState } from "react";
 import logo from "/equipe2/logo.png";
-import { ShoppingCart as ShoppingCartIcon } from "lucide-react";
+import { ShoppingCart as ShoppingCartIcon, User } from "lucide-react";
 import ShoppingCart from "./ShoppingCart";
 import { Link } from "react-router-dom";
 import { CartContext } from "../CartContext";
 import Login from "./Login";
 import { UserContext } from "@/UserContext";
 import ProfileButton from "./ProfileButton";
+import { Button } from "./ui/button";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -62,8 +63,16 @@ const Header = () => {
             </div>
 
             {/* Ícone do usuário */}
-            {isLogged ? <ProfileButton /> : <Login />}
-      
+            {isLogged ? (
+              <ProfileButton />
+            ) : (
+              <Login>
+                <Button size="icon" className="hover:brightness-90 hover:bg-secondary bg-secondary w-10 h-10 md:w-12 md:h-12 transition duration-200" aria-label="Abrir login do usuário">
+                  <User className="h-6 w-6 transition duration-200 text-primary" aria-hidden="true" />
+                </Button>
+              </Login>
+            )}
+
             {/* Botão para abrir/fechar menu mobile */}
             <button className="text-secondary text-3xl md:hidden focus:outline-none" onClick={toggleMenu} aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={isMenuOpen}>
               &#9776;
@@ -88,7 +97,6 @@ const Header = () => {
           </nav>
         )}
       </header>
-
     </>
   );
 };

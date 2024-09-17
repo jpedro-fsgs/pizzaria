@@ -1,6 +1,5 @@
 import { Endereco } from "@/UserContext";
-import { MailIcon, MapPinIcon, PhoneIcon, UserIcon } from "lucide-react";
-import React from "react";
+import { MapPinIcon } from "lucide-react";
 
 const EnderecoTab = ({ endereco }: { endereco: Endereco | undefined }) => {
   return (

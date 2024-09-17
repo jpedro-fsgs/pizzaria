@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User } from "lucide-react";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 import { UserContext } from "@/UserContext";
 import LoadingIcon from "./ui/loading";
 
@@ -54,7 +52,6 @@ function LoginForm() {
       username: data.email,
       password: data.password,
     });
-    // await new Promise(resolve => setTimeout(resolve, 1500));
     axios
       .post("http://localhost:2130/auth/token", postData)
       .then((response) => {
@@ -105,13 +102,11 @@ function LoginForm() {
   );
 }
 
-const Login = () => {
+const Login = ({children}:{children: ReactNode}) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="icon" className="hover:brightness-90 hover:bg-secondary bg-secondary w-10 h-10 md:w-12 md:h-12 transition duration-200" aria-label="Abrir login do usuário">
-          <User className="h-6 w-6 transition duration-200 text-primary" aria-hidden="true" />
-        </Button>
+        {children}
       </DialogTrigger>
       <DialogContent className="bg-base-100 max-md:w-[90vw] rounded-lg">
         <DialogHeader>
