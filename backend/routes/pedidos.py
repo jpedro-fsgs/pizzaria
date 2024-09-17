@@ -1,10 +1,9 @@
 import logging
 import os
 from typing import Annotated
-from sqlalchemy.orm import joinedload
 
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
-import crcmod
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import desc
 
 from database.schema import (
     Pedido,
@@ -12,7 +11,6 @@ from database.schema import (
     Produto,
     get_session,
     Session,
-    Usuario,
 )
 from models import PedidoResponse, ProdutoPedidoResponse, RealizarPedido
 
@@ -20,7 +18,7 @@ from app.pix import Payload
 from routes.auth import get_current_usuario
 
 # Definição chave de pix
-CHAVE_PIX = "jaimeodairbassojuniorjaime@gmail.com"
+CHAVE_PIX = os.environ.get("CHAVE_PIX")
 # Verificação da validade da chave PIX
 # CHAVE_PIX = os.environ.get("CHAVE_PIX")
 
@@ -95,7 +93,7 @@ async def get_pedidos_usuario(
     session: Session = Depends(get_session),
 ):
     try:
-        pedidos = session.query(Pedido).filter(Pedido.id_usuario == user["id"]).all()
+        pedidos = session.query(Pedido).filter(Pedido.id_usuario == user["id"]).order_by(desc(Pedido.horario_pedido)).all()
         pedido_produtos = session.query(PedidoProduto)
 
         pedido_response = []
@@ -139,7 +137,7 @@ async def get_pedidos_usuario(
         session.close()
 
 
-@router.post("/cadastrar")
+@router.post("/cadastrar/")
 async def cadastrar_pedido(
     pedido_input: RealizarPedido,
     user: Annotated[dict, Depends(get_current_usuario)],
@@ -220,17 +218,13 @@ async def cadastrar_pedido(
         session.close()
 
 
-@router.post("/pix/{pedido_id}")
+@router.get("/pix/{pedido_id}/")
 async def gerar_pix(pedido_id: int, session: Session = Depends(get_session)):
     pedido = session.query(Pedido).get(pedido_id)
 
     if not pedido:
         raise HTTPException(status_code=404, detail="Pedido não encontrado")
 
-    usuario = session.query(Usuario).get(pedido.id_usuario)
-    chave_pix = "jaimeodairbassojuniorjaime@gmail.com"  # Chave estática para simulação
-    nome_recebedor = "Jaime Odair Basso Junior"
-
-    payload_pix = Payload(chave_pix, pedido.total).gerarPayload()
+    payload_pix = Payload(CHAVE_PIX, pedido.total).gerarPayload()
 
     return {"payload": payload_pix}
