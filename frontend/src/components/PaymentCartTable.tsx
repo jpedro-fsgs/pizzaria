@@ -26,8 +26,13 @@ const PaymentCartTable = () => {
     removeItem(product);
   };
 
+  const handleCleanCart = () => {
+    clearCart();
+  };
+
   return (
     <div className="space-y-5 py-10 w-full overflow-y-auto">
+      <button onClick={handleCleanCart} className="btn btn-ghost btn-sm text-primary">Limpar</button>
       {cart.map((product, index) => {
         return (
           <div key={index}>

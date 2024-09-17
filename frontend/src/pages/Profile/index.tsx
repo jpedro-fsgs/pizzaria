@@ -1,7 +1,6 @@
 import EnderecoTab from "@/components/EnderecoTab";
 import MeuPerfilTab from "@/components/MeuPerfilTab";
 import MeusPedidosTab from "@/components/MeusPedidosTab";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserContext } from "@/UserContext";
 import { useContext } from "react";
@@ -29,7 +28,6 @@ const index = () => {
           <TabsTrigger value="meu-perfil">Meu Perfil</TabsTrigger>
           <TabsTrigger value="endereco">Endereço</TabsTrigger>
           <TabsTrigger value="meus-pedidos">Meus Pedidos</TabsTrigger>
-          {/* <Button className="btn btn-xs text-base-100" onClick={logout}>Logout</Button> */}
         </TabsList>
         <TabsContent value="meu-perfil">
           <MeuPerfilTab user={userContext} />

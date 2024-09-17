@@ -6,7 +6,6 @@ import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 import { useQuery } from "react-query";
 
 const fetchCategorias = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 3000)); // Simula atraso
   const { data } = await axios.get("http://localhost:2130/categorias/");
   return data;
 };
