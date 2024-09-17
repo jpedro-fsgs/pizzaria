@@ -3,14 +3,15 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import LoadingIcon from "./ui/loading";
-import { Skeleton } from "./ui/skeleton";
+import PixModal from "./PixModal";
+import { FaPix } from "react-icons/fa6";
 
-interface Pedido {
+export interface Pedido {
   id: number;
   id_usuario: number;
   nome_usuario: string;
   produtos: Produto[];
-  horario_pedido: string; // ou Date se for utilizado como objeto Date
+  horario_pedido: string;
   total: number;
 }
 
@@ -25,8 +26,7 @@ interface Produto {
 
 const MeusPedidosTab = ({ user }: { user: UserContextType }) => {
   const fetchMeusPedidos = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 3000)); // Simula atraso
-    const { data } = await axios.get<Pedido[]>("http://localhost:2130/pedidos/usuario", {
+    const { data } = await axios.get<Pedido[]>("http://localhost:2130/pedidos/usuario/", {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -51,29 +51,36 @@ const MeusPedidosTab = ({ user }: { user: UserContextType }) => {
         <TableHeader className="bg-primary text-secondary">
           <TableRow>
             <TableHead className="text-left">Data</TableHead>
-            <TableHead className="text-center">Produtos</TableHead>
+            <TableHead className="text-left">Produtos</TableHead>
             <TableHead className="text-right">Total</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className=" overflow-y-auto">
           {isLoading || !meusPedidos ? (
             <TableRow className="p-5">
-              <TableCell className="flex items-center gap-2 text-lg"><LoadingIcon /> Carregando...</TableCell>
+              <TableCell className="flex items-center gap-2 text-lg">
+                <LoadingIcon /> Carregando...
+              </TableCell>
             </TableRow>
           ) : (
             meusPedidos.map((pedido) => (
               <TableRow key={pedido.id}>
                 <TableCell>
-                  <p>{new Date(pedido.horario_pedido).toLocaleDateString("pt-BR")}</p>
-                  <p>{new Date(pedido.horario_pedido).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</p>
+                  {new Date(pedido.horario_pedido + "Z").getFullYear() == new Date().getFullYear() ?
+                    <>
+                    <p>{new Date(pedido.horario_pedido + "Z").toLocaleDateString("pt-BR", {day: "numeric", month: "numeric"})}</p>
+                    <p>{new Date(pedido.horario_pedido + "Z").toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</p>
+                  </>:
+              <p>{new Date(pedido.horario_pedido + "Z").getFullYear()}</p>
+                  }
                 </TableCell>
-                <TableCell className="mx-auto w-52 space-y-2">
+                <TableCell className="mx-auto w-2/4 space-y-2">
                   {pedido.produtos.map((produto, index) => (
                     <div key={index} className="">
                       <span className="text-base font-semibold">{produto.nome_produto}</span>
                       <span className="text-sm italic"> {produto.tamanho}</span>
                       <span className="text-sm italic"> x{produto.quantidade}</span>
-                      <ul className="list-inside list-disc">
+                      <ul className="list-inside list-disc flex gap-4">
                         {produto.adicionais.map((adicional, index) => (
                           <li key={index}>{adicional}</li>
                         ))}
@@ -81,8 +88,13 @@ const MeusPedidosTab = ({ user }: { user: UserContextType }) => {
                     </div>
                   ))}
                 </TableCell>
-                <TableCell className="text-right text-lg font-semibold">
-                  <h2>R$ {pedido.total.toFixed(2)}</h2>
+                <TableCell className="text-lg font-semibold">
+                  <div className="flex justify-end items-center gap-2 p-2">
+                    <PixModal pedido={pedido}>
+                      <FaPix size={32} />
+                    </PixModal>
+                    R$ {pedido.total.toFixed(2)}
+                  </div>
                 </TableCell>
               </TableRow>
             ))
