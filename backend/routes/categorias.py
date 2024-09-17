@@ -36,7 +36,7 @@ async def get_categorias(session: Session = Depends(get_session)):
         raise HTTPException(status_code=500, detail="Erro ao buscar categorias.")
 
 
-@router.post("/cadastrar", response_model=CategoriaResponse)
+@router.post("/cadastrar/", response_model=CategoriaResponse)
 async def cadastrar_categoria(
     categoria_input: CadastrarCategoria,
     user: Annotated[dict, Depends(get_current_usuario)],

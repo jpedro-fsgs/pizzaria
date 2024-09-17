@@ -23,7 +23,7 @@ async def get_administradores(session: Session = Depends(get_session)):
     ]
 
 
-@router.post("/cadastrar")
+@router.post("/cadastrar/")
 async def cadastrar_administrador(
         administrador_input: CadastroUsuario, session: Session = Depends(get_session)
 ):

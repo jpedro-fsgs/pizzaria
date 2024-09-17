@@ -40,7 +40,7 @@ async def get_produtos(
     ]
 
 
-@router.post("/cadastrar", response_model=ProdutoResponse)
+@router.post("/cadastrar/", response_model=ProdutoResponse)
 async def cadastrar_produto(
     produto_input: CadastrarProduto,
     user: Annotated[dict, Depends(get_current_usuario)],
@@ -107,7 +107,7 @@ async def cadastrar_produto(
         raise HTTPException(status_code=500, detail="Erro ao cadastrar produto.")
 
 
-@router.put("/editar", response_model=ProdutoResponse)
+@router.put("/editar/", response_model=ProdutoResponse)
 async def editar_produto(
     produto_input: CadastrarProduto,
     user: Annotated[dict, Depends(get_current_usuario)],

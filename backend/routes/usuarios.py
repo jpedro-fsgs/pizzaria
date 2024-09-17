@@ -30,7 +30,7 @@ async def get_usuarios(session: Session = Depends(get_session)):
     ]
 
 
-@router.get("/atual")
+@router.get("/atual/")
 async def get_usuario_atual(
     user: Annotated[dict, Depends(get_current_usuario)],
     session: Session = Depends(get_session),
@@ -46,7 +46,7 @@ async def get_usuario_atual(
     )
 
 
-@router.post("/cadastrar")
+@router.post("/cadastrar/")
 async def cadastrar_usuario(
     usuario_input: CadastroUsuario, session: Session = Depends(get_session)
 ):

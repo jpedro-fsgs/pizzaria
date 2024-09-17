@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-@router.post("/token", response_model=Token)
+@router.post("/token/", response_model=Token)
 async def login_for_acess_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                                 session: Session = Depends(get_session)):
     
@@ -41,7 +41,8 @@ async def login_for_acess_token(form_data: Annotated[OAuth2PasswordRequestForm, 
         )
 
     usuario = autenticar_usuario(usuario, form_data.password)
-    token = criar_token_acesso(usuario.email, usuario.id, usuario.adm, timedelta(minutes=20))
+    token = criar_token_acesso(usuario.email, usuario.id, usuario.adm, timedelta(minutes=200))
+    # token = criar_token_acesso(usuario.email, usuario.id, usuario.adm, timedelta(minutes=20))
 
     logger.info(f"Usuário {usuario.email} autenticado com sucesso.")
     return {"access_token": token, "token_type": "bearer"}
