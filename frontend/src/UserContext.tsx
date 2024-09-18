@@ -28,6 +28,7 @@ export interface UserContextType {
   setEndereco: (endereco: Endereco) => void;
   setEmail: (email: string) => void;
   setAdm: (adm: boolean) => void;
+  setUserData: (data: UserType) => void;
   logout: () => void;
 }
 
@@ -38,15 +39,16 @@ interface UserType {
   endereco: Endereco;
   email: string;
   adm: boolean;
+  token: { access_token: string; token_type: "string" };
 }
-
-
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
+  const apiURL = import.meta.env.VITE_API_URL;
+
   const [isLogged, setIsLogged] = useState<boolean>(false);
-  const [token, setToken] = useState<string>("")
+  const [token, setToken] = useState<string>("");
   const [id, setId] = useState<number | undefined>(undefined);
   const [nome, setNome] = useState<string | undefined>(undefined);
   const [telefone, setTelefone] = useState<string | undefined>(undefined);
@@ -61,9 +63,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setId(data.id);
     setNome(data.nome);
     setTelefone(data.telefone);
-    setEndereco(data.endereco)
+    setEndereco(data.endereco);
     setEmail(data.email);
     setAdm(data.adm);
+    if(!token){
+      setToken(data.token.access_token);
+    }
   };
 
   const logout = () => {
@@ -71,34 +76,35 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("access_token", "");
     navigate("/");
     location.reload();
-  }
+  };
 
   useEffect(() => {
     const storedToken = localStorage.getItem("access_token");
-    if(storedToken && storedToken !== ""){
+    if (storedToken && storedToken !== "") {
       setToken(storedToken);
     }
   }, []);
 
   useEffect(() => {
-    console.log(token);
-    if(!token) return;
+    if (!token) return;
     localStorage.setItem("access_token", token);
-    axios.get("http://localhost:2130/usuarios/atual", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    .then((response) => {
-      setUserData(response.data)
-    })
-    .catch((error) => {
-      if(error.status === 401){
-        alert("Sessão expirada, faça login novamente");
-        logout();
-      }
-      console.error(error)
-    })
+    if(isLogged) return;
+    axios
+      .get(apiURL + "/usuarios/atual/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setUserData(response.data);
+      })
+      .catch((error) => {
+        if (error.status === 401) {
+          alert("Sessão expirada, faça login novamente");
+          logout();
+        }
+        console.error(error);
+      });
   }, [token]);
 
   return (
@@ -120,7 +126,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setEndereco,
         setEmail,
         setAdm,
-        logout
+        setUserData,
+        logout,
       }}
     >
       {children}
