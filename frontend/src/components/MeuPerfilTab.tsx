@@ -21,7 +21,7 @@ const MeuPerfilTab = ({ user }: { user: UserContextType }) => {
         </div>
       </div>
       <div className="flex">
-        <Button className="mx-auto" onClick={logout}>
+        <Button className="mx-auto bg-warning text-warning-content" onClick={logout}>
           Logout
         </Button>
       </div>

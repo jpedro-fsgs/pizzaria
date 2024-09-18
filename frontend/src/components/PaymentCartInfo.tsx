@@ -3,7 +3,7 @@ import { CartContext } from "@/CartContext";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { UserContext } from "@/UserContext";
-import Login from "./Login";
+import Login from "./LoginModal";
 import { useMutation } from "react-query";
 import LoadingIcon from "./ui/loading";
 import { toast } from "sonner";
@@ -47,7 +47,7 @@ const PaymentCartInfo = () => {
         <h2 className="text-3xl text-left">Total:</h2>
         <h2 className="text-2xl text-center">R$ {pedidoAtual.total.toFixed(2)}</h2>
           <PixModal pedido={pedidoAtual}>
-            <Button className="text-secondary btn btn-md"><FaPix size={32} />Efetuar Pagamento</Button>
+            <a className="text-secondary bg-primary btn btn-md"><FaPix size={32} />Efetuar Pagamento</a>
           </PixModal>
         </div>
       </div>
