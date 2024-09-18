@@ -4,7 +4,7 @@ import { ShoppingCart as ShoppingCartIcon, User } from "lucide-react";
 import ShoppingCart from "./ShoppingCart";
 import { Link } from "react-router-dom";
 import { CartContext } from "../CartContext";
-import Login from "./Login";
+import Login from "./LoginModal";
 import { UserContext } from "@/UserContext";
 import ProfileButton from "./ProfileButton";
 import { Button } from "./ui/button";
@@ -27,7 +27,7 @@ const Header = () => {
     throw new Error("Header must be used within a UserProvider");
   }
 
-  const { isLogged } = userContext;
+  const { isLogged, adm } = userContext;
 
   return (
     <>
@@ -46,6 +46,11 @@ const Header = () => {
                 <li className="hover:scale-105 hover:brightness-90 transition duration-200">
                   <Link to="/menu">Menu</Link>
                 </li>
+                {adm && (
+                  <li className="hover:scale-105 hover:brightness-90 transition duration-200">
+                    <Link to="/dashboard">Painel</Link>
+                  </li>
+                )}
               </ul>
             </nav>
 
@@ -93,6 +98,13 @@ const Header = () => {
                   Menu
                 </Link>
               </li>
+              {adm && (
+                <li>
+                  <Link to="/dashboard" className="hover:brightness-90 transition duration-200 block px-3 py-2 rounded-md text-base font-medium text-primary-foreground hover:text-primary hover:bg-accent" onClick={toggleMenu}>
+                    Painel
+                  </Link>
+                </li>
+              )}
             </ul>
           </nav>
         )}

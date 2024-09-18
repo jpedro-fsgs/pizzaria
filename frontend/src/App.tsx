@@ -11,6 +11,7 @@ import Payment from "./pages/Payment";
 import { UserProvider } from "./UserContext";
 import Profile from "./pages/Profile";
 import { Toaster } from "./components/ui/sonner";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/menu" element={<Menu />} />
+                <Route path="/dashboard" element={<Dashboard/>} />
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/profile" element={<Profile />} />
               </Routes>
