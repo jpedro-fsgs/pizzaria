@@ -25,8 +25,11 @@ interface Produto {
 }
 
 const MeusPedidosTab = ({ user }: { user: UserContextType }) => {
+  
+  const apiURL = import.meta.env.VITE_API_URL;
+  
   const fetchMeusPedidos = async () => {
-    const { data } = await axios.get<Pedido[]>("http://localhost:2130/pedidos/usuario/", {
+    const { data } = await axios.get<Pedido[]>(apiURL + "/pedidos/usuario/", {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -93,7 +96,7 @@ const MeusPedidosTab = ({ user }: { user: UserContextType }) => {
                     <PixModal pedido={pedido}>
                       <FaPix size={32} />
                     </PixModal>
-                    R$ {pedido.total.toFixed(2)}
+                    <div className="w-[100px]">R$ {pedido.total.toFixed(2)}</div>
                   </div>
                 </TableCell>
               </TableRow>

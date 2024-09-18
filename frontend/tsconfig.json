@@ -19,7 +19,8 @@
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
-    }
+    },
+    "types": ["vite/client", "node"]
   },
   "include": ["src", "global.d.ts"],
   "exclude": ["node_modules"]

@@ -6,7 +6,10 @@ import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 import { useQuery } from "react-query";
 
 const fetchCategorias = async () => {
-  const { data } = await axios.get("http://localhost:2130/categorias/");
+
+  const apiURL = import.meta.env.VITE_API_URL;
+
+  const { data } = await axios.get(apiURL + "/categorias/");
   return data;
 };
 

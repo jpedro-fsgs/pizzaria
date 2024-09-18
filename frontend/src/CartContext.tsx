@@ -25,6 +25,9 @@ interface CartProviderProps {
 }
 
 export const CartProvider = ({ children }: CartProviderProps) => {
+  
+  const apiURL = import.meta.env.VITE_API_URL;
+  
   const [cart, setCart] = useState<ProductCart[]>([]);
   const [cartSize, setCartSize] = useState<number>(0);
   const [cartTotal, setCartTotal] = useState<number>(0);
@@ -93,7 +96,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       };
     });
     const data = await axios.post<Pedido>(
-      "http://localhost:2130/pedidos/cadastrar/",
+      apiURL + "/pedidos/cadastrar/",
       { produtos: pedido },
       {
         headers: {

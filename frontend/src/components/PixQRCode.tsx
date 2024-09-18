@@ -9,8 +9,11 @@ import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 
 const PixQRCode = ({ id }: { id: number }) => {
+  
+  const apiURL = import.meta.env.VITE_API_URL;
+  
   const fetchPixCode = async (pedidoId: number) => {
-    const response = await axios.get(`http://localhost:2130/pedidos/pix/${pedidoId}/`);
+    const response = await axios.get(apiURL + `/pedidos/pix/${pedidoId}/`);
     return response.data;
   };
 
@@ -40,8 +43,6 @@ const PixQRCode = ({ id }: { id: number }) => {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
-  console.log(data);
 
   return (
     <div className="flex flex-col pb-8">
