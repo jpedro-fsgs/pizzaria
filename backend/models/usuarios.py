@@ -1,5 +1,5 @@
-from typing import Dict
 from pydantic import BaseModel
+
 
 class Endereco(BaseModel):
     rua: str
@@ -25,6 +25,9 @@ class UsuarioResponse(BaseModel):
     email: str
     adm: bool
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 class UsuarioResponseToken(BaseModel):
     id: int
@@ -32,4 +35,5 @@ class UsuarioResponseToken(BaseModel):
     telefone: str
     endereco: Endereco
     email: str
-    token: dict
+    adm: bool
+    token: Token

@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from models import CadastroUsuario, UsuarioResponse, UsuarioResponseToken
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
+from models.usuarios import Token
 from routes.auth import get_current_usuario
 
 
@@ -50,6 +51,7 @@ async def get_usuario_atual(
 async def cadastrar_usuario(
     usuario_input: CadastroUsuario, session: Session = Depends(get_session)
 ):
+    print("oi")
     if session.query(Usuario).filter(Usuario.email == usuario_input.email).first():
         raise HTTPException(status_code=409, detail="Email já cadastrado")
     try:
@@ -71,7 +73,7 @@ async def cadastrar_usuario(
         raise HTTPException(status_code=409, detail="Email já cadastrado")
     except SQLAlchemyError as e:
         session.rollback()
-        raise HTTPException(status_code=500, detail="Erro ao cadastrar usuário: " + str(e))
+        raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
@@ -83,5 +85,6 @@ async def cadastrar_usuario(
         telefone=usuario.telefone,
         endereco=usuario.endereco,
         email=usuario.email,
-        token={"access_token": token, "token_type": "bearer"},
+        adm=usuario.adm,
+        token=Token(access_token=token, token_type="bearer")
     )
