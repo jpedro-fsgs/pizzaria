@@ -1,16 +1,26 @@
-from datetime import timedelta
-from app.security import get_hashed_senha, criar_token_acesso
-from database.schema import Usuario, get_session, Session
-from fastapi import APIRouter, Depends, HTTPException
-from models import CadastroUsuario, UsuarioResponse, UsuarioResponseToken
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from typing import Annotated
+from database.schema import Pedido, PedidoProduto, Usuario, get_session, Session
+from fastapi import APIRouter, Depends, HTTPException, status
+from models import UsuarioResponse
+
+from models.pedidos import PedidoResponse, ProdutoPedidoResponse
+from routes.auth import get_current_usuario
 
 router = APIRouter()
 
 
-@router.get("/")
-async def get_administradores(session: Session = Depends(get_session)):
-    administradores = session.query(Usuario).filter(Usuario.adm == True).all()
+@router.get("/", response_model=list[UsuarioResponse])
+async def get_administradores(
+    user: Annotated[dict, Depends(get_current_usuario)],
+    session: Session = Depends(get_session),
+):
+
+    if not user["is_adm"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado"
+        )
+
+    administradores = session.query(Usuario).filter(Usuario.adm).all()
     return [
         UsuarioResponse(
             id=adm.id,
@@ -18,45 +28,111 @@ async def get_administradores(session: Session = Depends(get_session)):
             telefone=adm.telefone,
             endereco=adm.endereco,
             email=adm.email,
+            adm=True,
         )
         for adm in administradores
     ]
 
 
-@router.post("/cadastrar/")
-async def cadastrar_administrador(
-        administrador_input: CadastroUsuario, session: Session = Depends(get_session)
+@router.get("/usuarios/", response_model=list[UsuarioResponse])
+async def get_usuarios(
+    user: Annotated[dict, Depends(get_current_usuario)],
+    session: Session = Depends(get_session),
 ):
-    if session.query(Usuario).filter(Usuario.email == administrador_input.email).first():
-        raise HTTPException(status_code=409, detail="Email já cadastrado")
 
-    try:
-        adm = Usuario(
-            nome=administrador_input.nome,
-            telefone=administrador_input.telefone,
-            endereco=administrador_input.endereco,
-            email=administrador_input.email,
-            hashed_senha=get_hashed_senha(administrador_input.senha),
-            adm=True
+    if not user["is_adm"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado"
         )
-        session.add(adm)
-        session.commit()
 
-        # Gerar o token após o usuário ser salvo com sucesso
-        token = criar_token_acesso(adm.email, adm.id, adm.adm, timedelta(minutes=20))
+    usuarios = session.query(Usuario).all()
+    return [
+        UsuarioResponse(
+            id=usuario.id,
+            nome=usuario.nome,
+            telefone=usuario.telefone,
+            endereco=usuario.endereco,
+            email=usuario.email,
+            adm=usuario.adm,
+        )
+        for usuario in usuarios
+    ]
 
-    except IntegrityError:
-        session.rollback()
-        raise HTTPException(status_code=409, detail="Erro ao cadastrar: Email já cadastrado")
-    except SQLAlchemyError as e:
-        session.rollback()
-        raise HTTPException(status_code=500, detail="Erro ao cadastrar usuário: " + str(e))
 
-    return UsuarioResponseToken(
+@router.get("/pedidos/", response_model=list[PedidoResponse])
+async def get_pedidos(
+    user: Annotated[dict, Depends(get_current_usuario)],
+    session: Session = Depends(get_session),
+):
+
+    if not user["is_adm"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado"
+        )
+
+    pedidos = session.query(Pedido).all()
+    pedido_produtos = session.query(PedidoProduto)
+
+    pedido_response = []
+    for pedido in pedidos:
+        produtos = []
+        for produto in pedido.produtos:
+
+            produto_pedido = (
+                pedido_produtos.filter(PedidoProduto.pedido_id == pedido.id)
+                .filter(PedidoProduto.produto_id == produto.id)
+                .first()
+            )
+
+            produtos.append(
+                ProdutoPedidoResponse(
+                    id_produto=produto.id,
+                    nome_produto=produto.nome,
+                    quantidade=produto_pedido.quantidade,
+                    preco=produto_pedido.preco_total,
+                    adicionais=produto_pedido.adicionais_pedido,
+                    tamanho=produto_pedido.tamanho,
+                )
+            )
+        pedido_response.append(
+            PedidoResponse(
+                id=pedido.id,
+                id_usuario=pedido.id_usuario,
+                nome_usuario=pedido.usuario.nome,
+                produtos=produtos,
+                horario_pedido=pedido.horario_pedido,
+                total=pedido.total,
+            )
+        )
+
+    return pedido_response
+
+
+@router.post("/set-adm/{id}/")
+async def set_administrador(
+    id: int,
+    user: Annotated[dict, Depends(get_current_usuario)],
+    session: Session = Depends(get_session),
+):
+
+    if not user["is_adm"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado"
+        )
+    
+    adm = session.query(Usuario).get(id)
+
+    if adm.adm:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Usuário já é administrador")
+    
+    adm.adm = True
+    session.commit()
+
+    return UsuarioResponse(
         id=adm.id,
         nome=adm.nome,
         telefone=adm.telefone,
         endereco=adm.endereco,
         email=adm.email,
-        token={"access_token": token, "token_type": "bearer"}
+        adm=adm.adm,
     )
