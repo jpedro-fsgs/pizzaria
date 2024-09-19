@@ -154,7 +154,7 @@ async def cadastrar_pedido(
             produto = session.query(Produto).get(produto_input.id_produto)
 
             if not produto:
-                raise HTTPException(status_code=404, detail="Produto não encontrado")
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Produto não encontrado")
 
             produtos.append(produto)
             total += produto_input.preco * produto_input.quantidade

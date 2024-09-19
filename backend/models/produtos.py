@@ -17,6 +17,17 @@ class CadastrarProduto(BaseModel):
     adicionais: List[Adicional]
     id_categoria: int
 
+class EditarProduto(BaseModel):
+    nome: Optional[str]
+    descricao: Optional[str]
+    remover_precos: List[str]
+    precos: Optional[List[TamanhoPreco]]
+    remover_imagens: List[str]
+    url_imagens: Optional[List[str]]
+    remover_adicionais: List[str]
+    adicionais: Optional[List[Adicional]]
+    id_categoria: Optional[int]
+
 class ProdutoResponse(BaseModel):
     id: int
     nome: str

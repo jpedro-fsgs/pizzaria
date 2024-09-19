@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 
@@ -16,6 +17,13 @@ class CadastroUsuario(BaseModel):
     email: str
     senha: str
 
+class UpdateUsuario(BaseModel):
+    nome: Optional[str]
+    telefone: Optional[str]
+    endereco: Optional[Endereco]
+    email: Optional[str]
+    senha: Optional[str]
+
 
 class UsuarioResponse(BaseModel):
     id: int
@@ -32,4 +40,5 @@ class UsuarioResponseToken(BaseModel):
     endereco: Endereco
     email: str
     adm: bool
-    token: Token
+    access_token: str
+    token_type: str

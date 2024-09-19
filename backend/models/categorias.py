@@ -19,3 +19,7 @@ class CategoriaResponse(BaseModel):
     id: int
     nome: str
     produtos: List[ProdutoCategoria]
+
+class EditarCategoria(BaseModel):
+    id: int
+    nome: Optional[str]

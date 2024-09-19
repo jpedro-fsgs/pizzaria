@@ -36,7 +36,7 @@ class Usuario(Base):
     hashed_senha = Column(String, nullable=False)
     adm = Column(Boolean, default=False)
     
-    pedidos = relationship('Pedido', back_populates='usuario')
+    pedidos = relationship('Pedido', back_populates='usuario', cascade='all, delete')
 
 class Categoria(Base):
     __tablename__ = 'categoria'
@@ -44,7 +44,7 @@ class Categoria(Base):
     id = Column(Integer, primary_key=True)
     nome = Column(String, nullable=False, unique=True)
 
-    produtos = relationship('Produto', back_populates='categoria')
+    produtos = relationship('Produto', back_populates='categoria', cascade='all, delete')
 
 
 class Produto(Base):
