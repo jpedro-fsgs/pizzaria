@@ -11,7 +11,6 @@ from routes import (
     categorias_router,
     admin_router,
 )
-from starlette.responses import JSONResponse
 
 # Criar pasta de logs se não existir
 os.makedirs("logs", exist_ok=True)
@@ -56,11 +55,3 @@ async def index() -> dict:
     """Endpoint principal da aplicação."""
     return {"Pizzaria": "Hackaton"}
 
-# Middleware de tratamento de erros
-@app.exception_handler(Exception)
-async def global_exception_handler(request, exc):
-    logging.error(f"Erro inesperado: {exc}")
-    return JSONResponse(
-        status_code=500,
-        content={"detail": "Ocorreu um erro inesperado. Tente novamente mais tarde."},
-    )

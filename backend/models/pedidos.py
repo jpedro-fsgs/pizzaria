@@ -2,8 +2,6 @@ from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel
 
-from models.produtos import Adicional, TamanhoPreco
-
 class ProdutoPedido(BaseModel):
     id_produto: int
     quantidade: int

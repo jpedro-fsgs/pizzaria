@@ -20,7 +20,6 @@ class Payload():
         self.merchantCategCode = '52040000'
         self.transactionCurrency = '5303986'
         self.transactionAmount = f'54{self.transactionAmount_tam}'
-        print(self.transactionAmount)
         self.countryCode = '5802BR'
         self.merchantName = f'5900'
         self.merchantCity = f'6000'
@@ -39,39 +38,3 @@ class Payload():
         self.crc16Code_formatado = str(self.crc16Code).replace('0x', '').upper()
 
         self.payload_completa = f'{payload}{self.crc16Code_formatado}'
-
-
-# 000201
-# 2658
-# 0014
-# BR.GOV.BCB.PIX01
-# 36
-# jaimeodairbassojuniorjaime@gmail.com
-# 52040000
-# 5303986
-# 540599.99
-# 5802BR
-# 5900
-# 6000
-# 620705
-# 03***
-# 6304
-# 4D06
-
-#
-# 000201
-# 2658
-# 0014
-# BR.GOV.BCB.PIX01
-# 36
-# jaimeodairbassojuniorjaime@gmail.com
-# 52040000
-# 5303986
-# 540599.99
-# 5802BR
-# 5900
-# 6000
-# 620705
-# 03***
-# 6304
-# E7B8

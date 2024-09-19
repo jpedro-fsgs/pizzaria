@@ -25,10 +25,6 @@ class UsuarioResponse(BaseModel):
     email: str
     adm: bool
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
 class UsuarioResponseToken(BaseModel):
     id: int
     nome: str
