@@ -2,7 +2,7 @@ import logging
 import os
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import desc
 
 from database.schema import (
@@ -15,13 +15,13 @@ from database.schema import (
 from models import PedidoResponse, ProdutoPedidoResponse, RealizarPedido
 
 from app.pix import Payload
+from models.pedidos import PayloadPix
 from routes.auth import get_current_usuario
 
 # Definição chave de pix
 CHAVE_PIX = os.environ.get("CHAVE_PIX")
-# Verificação da validade da chave PIX
-# CHAVE_PIX = os.environ.get("CHAVE_PIX")
 
+# Verificação da validade da chave PIX
 if not CHAVE_PIX:
     raise ValueError("A chave PIX não foi configurada. Verifique o arquivo.env.")
 
@@ -36,58 +36,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-# def send_whatsapp_notification(phone_number: str, message: str, background_tasks: BackgroundTasks) -> None:
-#     background_tasks.add_task(pywhatkit.sendwhatmsg_instantly, phone_number, message, 7, True, 2)
-
-
-@router.get("/")
-async def get_pedidos(session: Session = Depends(get_session)):
-    try:
-        pedidos = session.query(Pedido).all()
-        pedido_produtos = session.query(PedidoProduto)
-
-        pedido_response = []
-        for pedido in pedidos:
-            produtos = []
-            for produto in pedido.produtos:
-
-                produto_pedido = (
-                    pedido_produtos
-                    .filter(PedidoProduto.pedido_id == pedido.id)
-                    .filter(PedidoProduto.produto_id == produto.id)
-                    .first()
-                )
-
-                produtos.append(
-                    ProdutoPedidoResponse(
-                        id_produto=produto.id,
-                        nome_produto=produto.nome,
-                        quantidade=produto_pedido.quantidade,
-                        preco=produto_pedido.preco_total,
-                        adicionais=produto_pedido.adicionais_pedido,
-                        tamanho=produto_pedido.tamanho,
-                    )
-                )
-            pedido_response.append(
-                PedidoResponse(
-                    id=pedido.id,
-                    id_usuario=pedido.id_usuario,
-                    nome_usuario=pedido.usuario.nome,
-                    produtos=produtos,
-                    horario_pedido=pedido.horario_pedido,
-                    total=pedido.total,
-                )
-            )
-        return pedido_response
-
-    except Exception as e:
-        logger.error(f"Erro buscando pedidos: {e}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
-    finally:
-        session.close()
-
-
-@router.get("/usuario/")
+@router.get("/usuario/", response_model=list[PedidoResponse])
 async def get_pedidos_usuario(
     user: Annotated[dict, Depends(get_current_usuario)],
     session: Session = Depends(get_session),

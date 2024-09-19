@@ -27,3 +27,6 @@ class PedidoResponse(BaseModel):
     produtos: List[ProdutoPedidoResponse]
     horario_pedido: datetime
     total: float
+
+class PayloadPix(BaseModel):
+    payload: str
