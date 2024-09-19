@@ -39,7 +39,8 @@ interface UserType {
   endereco: Endereco;
   email: string;
   adm: boolean;
-  token: { access_token: string; token_type: "string" };
+  access_token: string;
+  token_type: string;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -67,7 +68,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setEmail(data.email);
     setAdm(data.adm);
     if(!token){
-      setToken(data.token.access_token);
+      setToken(data.access_token);
     }
   };
 
