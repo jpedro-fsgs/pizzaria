@@ -36,7 +36,10 @@ async def get_usuario_atual(
     user: Annotated[dict, Depends(get_current_usuario)],
     session: Session = Depends(get_session),
 ):
-    usuario = session.query(Usuario).filter(Usuario.id == user["id"]).first()
+    usuario = session.query(Usuario).get(user["id"])
+    if not usuario:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Usuário não encontrado")
+    
     return UsuarioResponse(
         id=usuario.id,
         nome=usuario.nome,
@@ -47,13 +50,12 @@ async def get_usuario_atual(
     )
 
 
-@router.post("/cadastrar/")
+@router.post("/cadastrar/", response_model=UsuarioResponseToken)
 async def cadastrar_usuario(
     usuario_input: CadastroUsuario, session: Session = Depends(get_session)
 ):
-    print("oi")
     if session.query(Usuario).filter(Usuario.email == usuario_input.email).first():
-        raise HTTPException(status_code=409, detail="Email já cadastrado")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email já cadastrado")
     try:
         usuario = Usuario(
             nome=usuario_input.nome,
@@ -70,12 +72,12 @@ async def cadastrar_usuario(
             usuario.email, usuario.id, usuario.adm, timedelta(minutes=20)
         )
     except IntegrityError:
-        raise HTTPException(status_code=409, detail="Email já cadastrado")
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email já cadastrado")
     except SQLAlchemyError as e:
         session.rollback()
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     finally:
         session.close()
 

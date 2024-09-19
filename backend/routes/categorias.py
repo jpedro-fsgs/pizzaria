@@ -33,7 +33,10 @@ async def get_categorias(session: Session = Depends(get_session)):
         ]
     except Exception as e:
         logger.error(f"Erro ao buscar categorias: {e}")
-        raise HTTPException(status_code=500, detail="Erro ao buscar categorias.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Erro ao buscar categorias.",
+        )
 
 
 @router.post("/cadastrar/", response_model=CategoriaResponse)
@@ -42,8 +45,10 @@ async def cadastrar_categoria(
     user: Annotated[dict, Depends(get_current_usuario)],
     session: Session = Depends(get_session),
 ):
-    if not user:
-        raise HTTPException(status_code=403, detail="Cabeçalho de autorização ausente.")
+    if not user["is_adm"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado"
+        )
 
     try:
         categoria = Categoria(nome=categoria_input.nome)
@@ -53,7 +58,9 @@ async def cadastrar_categoria(
 
     except IntegrityError:
         session.rollback()
-        raise HTTPException(status_code=409, detail="Categoria já cadastrada.")
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail="Categoria já cadastrada."
+        )
     except Exception as e:
         session.rollback()
         logger.error(f"Erro ao cadastrar categoria: {e}")

@@ -46,31 +46,20 @@ async def cadastrar_produto(
     user: Annotated[dict, Depends(get_current_usuario)],
     session: Session = Depends(get_session),
 ) -> ProdutoResponse:
-    """
-    Cadastra um novo produto.
 
-    - **Parâmetros**:
-        - `produto_input`: Objeto contendo os dados do produto a ser cadastrado (nome, descrição, preço, url_imagem, id_categoria).
-        - `user`: O usuário que está fazendo a requisição. Deve ser um administrador.
-
-    - **Retorna** o produto cadastrado com suas informações (id, nome, descrição, preço, imagem, categoria).
-
-    - **Lança**:
-        - `HTTPException` 403 se o usuário não tiver permissão.
-        - `HTTPException` 400 se a categoria não existir.
-        - `HTTPException` 409 se o produto já estiver cadastrado.
-        - `HTTPException` 500 em caso de erro inesperado ao cadastrar.
-    """
-    if not user or not user.get("is_adm"):
-        print(not user.get("is_adm"))
-        raise HTTPException(status_code=403, detail="Usuário sem permissão.")
+    if not user["is_adm"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Usuário sem permissão."
+        )
 
     if (
         not session.query(Categoria)
         .filter(Categoria.id == produto_input.id_categoria)
         .first()
     ):
-        raise HTTPException(status_code=400, detail="Categoria não existe.")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Categoria não existe."
+        )
 
     try:
         # Criar o produto
@@ -100,11 +89,16 @@ async def cadastrar_produto(
 
     except IntegrityError:
         session.rollback()
-        raise HTTPException(status_code=409, detail="Produto já cadastrado.")
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail="Produto já cadastrado."
+        )
     except Exception as e:
         session.rollback()
         logger.error(f"Erro ao cadastrar produto: {str(e)}")
-        raise HTTPException(status_code=500, detail="Erro ao cadastrar produto.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Erro ao cadastrar produto.",
+        )
 
 
 @router.put("/editar/", response_model=ProdutoResponse)
@@ -113,38 +107,29 @@ async def editar_produto(
     user: Annotated[dict, Depends(get_current_usuario)],
     session: Session = Depends(get_session),
 ) -> ProdutoResponse:
-    """
-    Edita um produto existente.
 
-    - **Parâmetros**:
-        - `produto_input`: Objeto contendo os dados do produto a ser editado (id, nome, descrição, preço, url_imagem, id_categoria).
-        - `user`: O usuário que está fazendo a requisição. Deve ser um administrador.
-
-    - **Retorna** o produto atualizado com suas informações (nome, descrição, preço, imagem, categoria).
-
-    - **Lança**:
-        - `HTTPException` 403 se o usuário não tiver permissão.
-        - `HTTPException` 400 se a categoria não existir.
-        - `HTTPException` 404 se o produto não for encontrado.
-        - `HTTPException` 409 se o produto já estiver cadastrado.
-        - `HTTPException` 500 em caso de erro inesperado ao editar.
-    """
-    if not user or not user.get("is_adm"):
-        raise HTTPException(status_code=403, detail="Usuário sem permissão.")
+    if not user["is_adm"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Usuário sem permissão."
+        )
 
     if (
         not session.query(Categoria)
         .filter(Categoria.id == produto_input.id_categoria)
         .first()
     ):
-        raise HTTPException(status_code=400, detail="Categoria não existe.")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Categoria não existe."
+        )
 
     try:
         # Busca o produto pelo ID
         produto = session.query(Produto).get(produto_input.id)
 
         if not produto:
-            raise HTTPException(status_code=404, detail="Produto não encontrado.")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Produto não encontrado."
+            )
 
         # Atualiza os campos do produto
         produto.nome = produto_input.nome
@@ -167,7 +152,9 @@ async def editar_produto(
 
     except IntegrityError:
         session.rollback()
-        raise HTTPException(status_code=409, detail="Produto já cadastrado.")
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail="Produto já cadastrado."
+        )
     except Exception as e:
         session.rollback()
         raise HTTPException(status_code=500, detail=f"Erro ao editar produto: {str(e)}")

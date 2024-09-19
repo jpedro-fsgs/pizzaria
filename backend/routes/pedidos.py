@@ -132,12 +132,12 @@ async def get_pedidos_usuario(
     
     except Exception as e:
         logger.error(f"Erro buscando pedidos: {e}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
     finally:
         session.close()
 
 
-@router.post("/cadastrar/")
+@router.post("/cadastrar/", response_model=PedidoResponse)
 async def cadastrar_pedido(
     pedido_input: RealizarPedido,
     user: Annotated[dict, Depends(get_current_usuario)],
@@ -213,18 +213,18 @@ async def cadastrar_pedido(
         
     except Exception as e:
         logger.error(f"Erro cadastrando ordem: {e}")
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
     finally:
         session.close()
 
 
-@router.get("/pix/{pedido_id}/")
+@router.get("/pix/{pedido_id}/", response_model=PayloadPix)
 async def gerar_pix(pedido_id: int, session: Session = Depends(get_session)):
     pedido = session.query(Pedido).get(pedido_id)
 
     if not pedido:
-        raise HTTPException(status_code=404, detail="Pedido não encontrado")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pedido não encontrado")
 
     payload_pix = Payload(CHAVE_PIX, pedido.total).gerarPayload()
 
-    return {"payload": payload_pix}
+    return PayloadPix(payload=payload_pix)
