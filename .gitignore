@@ -1,3 +1,5 @@
 *.db
-backend/logs/app.log
+app.log
 .env
+*.sql
+
