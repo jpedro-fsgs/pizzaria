@@ -1,4 +1,3 @@
-import logging
 import os
 from typing import Annotated
 
@@ -29,9 +28,6 @@ if not CHAVE_PIX:
 # Verificação da validade da chave PIX
 
 # Criar pasta de logs se não existir
-
-
-logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -160,11 +156,6 @@ async def cadastrar_pedido(
             total=pedido.total,
         )
         
-    except Exception as e:
-        logger.error(f"Erro cadastrando ordem: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
-    finally:
-        session.close()
 
 
 @router.get("/pix/{pedido_id}/", response_model=PayloadPix)

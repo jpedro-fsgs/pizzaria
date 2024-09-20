@@ -9,7 +9,6 @@ from models.categorias import (
 )
 from database.schema import Categoria, get_session, Session
 from routes.auth import get_current_usuario
-from routes.pedidos import logger
 
 router = APIRouter()
 
@@ -65,13 +64,6 @@ async def cadastrar_categoria(
         session.rollback()
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail="Categoria já cadastrada."
-        )
-    except Exception as e:
-        session.rollback()
-        logger.error(f"Erro ao cadastrar categoria: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Erro ao cadastrar categoria.",
         )
 
 

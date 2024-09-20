@@ -1,4 +1,3 @@
-import logging
 import os
 
 from fastapi import FastAPI
@@ -10,19 +9,6 @@ from routes import (
     usuarios_router,
     categorias_router,
     admin_router,
-)
-
-# Criar pasta de logs se não existir
-os.makedirs("logs", exist_ok=True)
-
-# Configuração do logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler("logs/app.log"),
-        logging.StreamHandler()  # Para visualizar os logs no console
-    ]
 )
 
 app = FastAPI(title="Pizzaria Hackaton")
