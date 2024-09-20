@@ -78,22 +78,22 @@ async def get_pedidos(
         produtos = []
         for produto in pedido.produtos:
 
-            produto_pedido = (
+            produtos_pedido = (
                 pedido_produtos.filter(PedidoProduto.pedido_id == pedido.id)
                 .filter(PedidoProduto.produto_id == produto.id)
-                .first()
+                .all()
             )
-
-            produtos.append(
-                ProdutoPedidoResponse(
-                    id_produto=produto.id,
-                    nome_produto=produto.nome,
-                    quantidade=produto_pedido.quantidade,
-                    preco=produto_pedido.preco_total,
-                    adicionais=produto_pedido.adicionais_pedido,
-                    tamanho=produto_pedido.tamanho,
+            for produto_pedido in produtos_pedido:
+                produtos.append(
+                    ProdutoPedidoResponse(
+                        id_produto=produto.id,
+                        nome_produto=produto.nome,
+                        quantidade=produto_pedido.quantidade,
+                        preco=produto_pedido.preco_total,
+                        adicionais=produto_pedido.adicionais_pedido,
+                        tamanho=produto_pedido.tamanho,
+                    )
                 )
-            )
         pedido_response.append(
             PedidoResponse(
                 id=pedido.id,

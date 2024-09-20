@@ -109,84 +109,74 @@ async def editar_produto(
             status_code=status.HTTP_403_FORBIDDEN, detail="Usuário sem permissão."
         )
 
-    if (
-        not session.query(Categoria)
-        .filter(Categoria.id == produto_update.id_categoria)
-        .first()
-    ):
+    if produto_update.id_categoria != 0 and not session.query(Categoria).get(produto_update.id_categoria):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Categoria não existe."
         )
 
-    try:
-        # Busca o produto pelo ID
-        produto = session.query(Produto).get(produto_update.id)
+    # Busca o produto pelo ID
+    produto = session.query(Produto).get(produto_update.id)
 
-        if not produto:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Produto não encontrado."
-            )
-
-        # Atualiza os campos do produto
-        if produto_update.nome:
-            produto.nome = produto_update.nome
-        if produto_update.descricao:
-            produto.descricao = produto_update.descricao
-        if produto_update.remover_precos:
-            produto.preco = [
-                preco
-                for preco in produto.preco
-                if preco.tamanho not in produto_update.remover_precos
-            ]
-
-        if produto_update.preco:
-            produto.preco += produto_update.preco
-
-        if produto_update.remover_imagens:
-            produto.url_imagens = [
-                imagem
-                for imagem in produto.url_imagens
-                if imagem not in produto_update.remover_imagens
-            ]
-        if produto_update.url_imagem:
-            produto.url_imagens += produto_update.url_imagens
-
-        if produto_update.remover_adicionais:
-            produto.adicionais = [
-                adicional
-                for adicional in produto.adicionais
-                if adicional.nome not in produto_update.remover_adicionais
-            ]
-
-        if produto_update.adicionais:
-            produto.adicionais += produto_update.adicionais
-
-        if produto_update.id_categoria:
-            produto.id_categoria = produto_update.id_categoria
-
-        session.commit()
-
-        return ProdutoResponse(
-            id=produto.id,
-            nome=produto.nome,
-            descricao=produto.descricao,
-            preco=produto.preco,
-            url_imagem=produto.url_imagem,
-            id_categoria=produto.id_categoria,
-            categoria=produto.categoria.nome,
-        )
-
-    except IntegrityError:
-        session.rollback()
+    if not produto:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail="Produto já cadastrado."
+            status_code=status.HTTP_404_NOT_FOUND, detail="Produto não encontrado."
         )
-    except Exception as e:
-        session.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erro ao editar produto: {str(e)}",
-        )
+
+    # Atualiza os campos do produto
+    if produto_update.nome:
+        produto.nome = produto_update.nome
+    if produto_update.descricao:
+        produto.descricao = produto_update.descricao
+
+    # Remove os tamanhos em remover_preco, adiciona os novos tamanhos
+    # e substitui os tamanhos de mesmo nome
+    if produto_update.precos or produto_update.remover_precos:
+        produto.preco = [
+            preco
+            for preco in produto.preco
+            if preco["tamanho"] not in produto_update.remover_precos
+            and preco["tamanho"]
+            not in [preco_update.tamanho for preco_update in produto_update.precos]
+        ] + [preco.model_dump() for preco in produto_update.precos]
+
+    if produto_update.remover_imagens:
+        produto.url_imagens = [
+            imagem
+            for imagem in produto.url_imagens
+            if imagem not in produto_update.remover_imagens
+        ]
+    if produto_update.url_imagens:
+        produto.url_imagens += produto_update.url_imagens
+
+    if produto_update.remover_adicionais:
+        produto.adicionais = [
+            adicional
+            for adicional in produto.adicionais
+            if adicional["nome"] not in produto_update.remover_adicionais
+        ]
+
+    if produto_update.adicionais:
+        produto.adicionais += [
+            adicional.model_dump() for adicional in produto_update.adicionais
+        ]
+
+    if produto_update.id_categoria:
+        produto.id_categoria = produto_update.id_categoria
+
+    session.commit()
+
+    print("xxxxxxxxxxxxxxxxxxxxxxx")
+
+    return ProdutoResponse(
+        id=produto.id,
+        nome=produto.nome,
+        descricao=produto.descricao,
+        precos=produto.preco,
+        url_imagens=produto.url_imagens,
+        adicionais=produto.adicionais,
+        id_categoria=produto.id_categoria,
+        categoria=produto.categoria.nome,
+    )
 
 
 @router.delete("/deletar/{id}/", response_model=ProdutoResponse)

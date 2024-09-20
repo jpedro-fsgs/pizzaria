@@ -15,32 +15,26 @@ router = APIRouter()
 
 @router.get("/", response_model=list[CategoriaResponse])
 async def get_categorias(session: Session = Depends(get_session)):
-    try:
-        categorias = session.query(Categoria).all()
-        return [
-            CategoriaResponse(
-                id=categoria.id,
-                nome=categoria.nome,
-                produtos=[
-                    ProdutoCategoria(
-                        id=produto.id,
-                        nome=produto.nome,
-                        descricao=produto.descricao,
-                        preco=produto.preco,
-                        url_imagens=produto.url_imagens,
-                        adicionais=produto.adicionais,
-                    )
-                    for produto in categoria.produtos
-                ],
-            )
-            for categoria in categorias
-        ]
-    except Exception as e:
-        logger.error(f"Erro ao buscar categorias: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Erro ao buscar categorias.",
+
+    categorias = session.query(Categoria).all()
+    return [
+        CategoriaResponse(
+            id=categoria.id,
+            nome=categoria.nome,
+            produtos=[
+                ProdutoCategoria(
+                    id=produto.id,
+                    nome=produto.nome,
+                    descricao=produto.descricao,
+                    preco=produto.preco,
+                    url_imagens=produto.url_imagens,
+                    adicionais=produto.adicionais,
+                )
+                for produto in categoria.produtos
+            ],
         )
+        for categoria in categorias
+    ]
 
 
 @router.post("/cadastrar/", response_model=CategoriaResponse)

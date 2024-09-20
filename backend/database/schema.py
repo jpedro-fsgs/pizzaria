@@ -17,10 +17,11 @@ Base = declarative_base()
 
 class PedidoProduto(Base):
     __tablename__ = 'pedido_produto'
-    pedido_id = Column(Integer, ForeignKey('pedido.id'), primary_key=True)
+    
+    id = Column(Integer, primary_key=True)
+    pedido_id = Column(Integer, ForeignKey('pedido.id'))
+    produto_id = Column(Integer, ForeignKey('produto.id'))
     adicionais_pedido = Column(JSON, nullable=True)
-    observacoes = Column(String, nullable=True)
-    produto_id = Column(Integer, ForeignKey('produto.id'), primary_key=True)
     tamanho = Column(String, nullable=True)
     quantidade = Column(Integer, nullable=False)
     preco_total = Column(Float, nullable=False)

@@ -18,6 +18,7 @@ class CadastrarProduto(BaseModel):
     id_categoria: int
 
 class EditarProduto(BaseModel):
+    id: int
     nome: Optional[str]
     descricao: Optional[str]
     remover_precos: List[str]
