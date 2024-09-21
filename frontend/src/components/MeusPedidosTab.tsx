@@ -25,9 +25,8 @@ interface Produto {
 }
 
 const MeusPedidosTab = ({ user }: { user: UserContextType }) => {
-  
   const apiURL = import.meta.env.VITE_API_URL;
-  
+
   const fetchMeusPedidos = async () => {
     const { data } = await axios.get<Pedido[]>(apiURL + "/pedidos/usuario/", {
       headers: {
@@ -37,7 +36,7 @@ const MeusPedidosTab = ({ user }: { user: UserContextType }) => {
     return data;
   };
 
-  const { data: meusPedidos, error, isLoading } = useQuery([`categorias-${user.id}`], fetchMeusPedidos);
+  const { data: meusPedidos, error, isLoading } = useQuery({ queryKey: ["meus-pedidos", user.id], queryFn: fetchMeusPedidos });
 
   if (error) {
     console.error(error);
@@ -69,13 +68,14 @@ const MeusPedidosTab = ({ user }: { user: UserContextType }) => {
             meusPedidos.map((pedido) => (
               <TableRow key={pedido.id}>
                 <TableCell>
-                  {new Date(pedido.horario_pedido + "Z").getFullYear() == new Date().getFullYear() ?
+                  {new Date(pedido.horario_pedido + "Z").getFullYear() == new Date().getFullYear() ? (
                     <>
-                    <p>{new Date(pedido.horario_pedido + "Z").toLocaleDateString("pt-BR", {day: "numeric", month: "numeric"})}</p>
-                    <p>{new Date(pedido.horario_pedido + "Z").toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</p>
-                  </>:
-              <p>{new Date(pedido.horario_pedido + "Z").getFullYear()}</p>
-                  }
+                      <p>{new Date(pedido.horario_pedido + "Z").toLocaleDateString("pt-BR", { day: "numeric", month: "numeric" })}</p>
+                      <p>{new Date(pedido.horario_pedido + "Z").toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</p>
+                    </>
+                  ) : (
+                    <p>{new Date(pedido.horario_pedido + "Z").getFullYear()}</p>
+                  )}
                 </TableCell>
                 <TableCell className="mx-auto w-2/4 space-y-2">
                   {pedido.produtos.map((produto, index) => (

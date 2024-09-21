@@ -5,7 +5,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import LoadingIcon from "./ui/loading";
 import { FloatingLabelInput } from "./ui/floating-label-input";
-import { resolve } from "path";
 
 type LoginFormFields = {
   email: string;
@@ -30,7 +29,7 @@ function LoginForm() {
   } = useForm<LoginFormFields>();
 
   const onSubmit: SubmitHandler<LoginFormFields> = async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const postData = new URLSearchParams({
       username: data.email,

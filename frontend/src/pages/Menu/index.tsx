@@ -6,7 +6,6 @@ import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 import { useQuery } from "react-query";
 
 const fetchCategorias = async () => {
-
   const apiURL = import.meta.env.VITE_API_URL;
 
   const { data } = await axios.get(apiURL + "/categorias/");
@@ -14,10 +13,10 @@ const fetchCategorias = async () => {
 };
 
 const Menu = () => {
-  const { data: categorias, error, isLoading } = useQuery(["categorias"], fetchCategorias);
+  const { data: categorias, error, isLoading } = useQuery({ queryKey: ["categorias"], queryFn: fetchCategorias });
 
   if (error) {
-    console.error(error)
+    console.error(error);
     return (
       <main className="mx-auto py-8 space-y-16">
         <h1 className="text-5xl text-center mt-16 mx-16">Não foi possível conectar ao servidor</h1>

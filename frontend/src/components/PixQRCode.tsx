@@ -9,15 +9,15 @@ import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 
 const PixQRCode = ({ id }: { id: number }) => {
-  
   const apiURL = import.meta.env.VITE_API_URL;
-  
+
   const fetchPixCode = async (pedidoId: number) => {
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
     const response = await axios.get(apiURL + `/pedidos/pix/${pedidoId}/`);
     return response.data;
   };
 
-  const { data, isLoading, error } = useQuery(["pixCode", id], () => fetchPixCode(id));
+  const { data, isLoading, error } = useQuery({ queryKey: ["pixCode", id], queryFn: () => fetchPixCode(id) });
 
   const [copied, setCopied] = useState(false);
 
@@ -46,7 +46,7 @@ const PixQRCode = ({ id }: { id: number }) => {
 
   return (
     <div className="flex flex-col pb-8">
-      <QRCodeSVG value={data.payload} className="mx-auto size-full p-10 md:p-20"/>
+      <QRCodeSVG value={data.payload} className="mx-auto size-full p-10 md:p-20" />
       <div className="flex items-center space-x-2 p-4 bg-gray-100 rounded-lg w-fit mx-auto mt-auto justify-self-end">
         <pre className="font-mono text-sm whitespace-pre-wrap break-all">{data.payload}</pre>
         <Button onClick={handleCopy} variant="outline" size="sm">
