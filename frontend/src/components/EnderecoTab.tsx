@@ -1,5 +1,6 @@
 import { Endereco } from "@/UserContext";
 import { MapPinIcon } from "lucide-react";
+import EditEndereco from "./EditEndereco";
 
 const EnderecoTab = ({ endereco }: { endereco: Endereco | undefined }) => {
   return (
@@ -14,7 +15,13 @@ const EnderecoTab = ({ endereco }: { endereco: Endereco | undefined }) => {
             Rua: {endereco.rua}, Nº: {endereco.numero}, {endereco.complemento}
           </div>
           <div className="flex text-xl gap-3 items-center pl-10">
-            Cidade: {endereco.cidade}, Estado: {endereco.estado}, CEP: {endereco.cep}
+            Bairro: {endereco.bairro}, CEP: {endereco.cep}
+          </div>
+          <div className="flex text-xl gap-3 items-center pl-10">
+            Cidade: {endereco.cidade}, Estado: {endereco.estado}
+          </div>
+          <div className="flex justify-center py-5">
+            <EditEndereco endereco={endereco}>Editar</EditEndereco>
           </div>
         </>
       ) : (

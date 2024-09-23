@@ -42,6 +42,7 @@ function RegisterForm() {
         rua: "indefinido",
         numero: 0,
         complemento: "indefinido",
+        bairro: "indefinido",
         cidade: "indefinido",
         estado: "indefinido",
         cep: "indefinido",
