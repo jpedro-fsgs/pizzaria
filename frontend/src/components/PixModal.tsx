@@ -10,7 +10,7 @@ const PixModal = ({ children, pedido }: { children: ReactNode; pedido: Pedido })
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className="bg-base-100">
+      <DialogContent className="bg-base-100 max-md:w-[90vw] rounded-lg">
         <DialogHeader>
           <DialogTitle>Pagamento Pix R$ {pedido.total.toFixed(2)}</DialogTitle>
                 <DialogDescription>Escaneie o QR Code ou copie o código</DialogDescription>

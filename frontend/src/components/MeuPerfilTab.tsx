@@ -16,7 +16,7 @@ const MeuPerfilTab = ({ user }: { user: UserContextType }) => {
           <PhoneIcon className="size-10" />
           Telefone: {telefone}
         </div>
-        <div className="flex text-2xl gap-3 items-center">
+        <div className="flex text-2xl gap-3 items-center break-all">
           <MailIcon className="size-10" />
           Email: {email}
         </div>
