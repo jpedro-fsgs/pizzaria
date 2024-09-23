@@ -25,9 +25,8 @@ interface CartProviderProps {
 }
 
 export const CartProvider = ({ children }: CartProviderProps) => {
-  
   const apiURL = import.meta.env.VITE_API_URL;
-  
+
   const [cart, setCart] = useState<ProductCart[]>([]);
   const [cartSize, setCartSize] = useState<number>(0);
   const [cartTotal, setCartTotal] = useState<number>(0);
@@ -103,10 +102,23 @@ export const CartProvider = ({ children }: CartProviderProps) => {
           Authorization: `Bearer ${token}`,
         },
       }
-    )
-    if(data.status === 200){
+    );
+    if (data.status === 200) {
       clearCart();
-      toast("Pedido Realizado!")
+      axios.post(apiURL + `/pedidos/email/${data.data.id}/`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        if(response.status == 200){
+          console.log("Email enviado");
+        }
+      })
+      .catch(() => {
+        console.error("Erro ao enviar email");
+      })
+      toast("Pedido Realizado!");
     }
     return data.data;
   };
