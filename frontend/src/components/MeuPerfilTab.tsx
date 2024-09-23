@@ -1,6 +1,7 @@
 import { UserContextType } from "@/UserContext";
 import { MailIcon, PhoneIcon, UserIcon } from "lucide-react";
-import { Button } from "./ui/button";
+import LogoutConfirm from "./LogoutConfirm";
+import EditPerfil from "./EditPerfil";
 
 const MeuPerfilTab = ({ user }: { user: UserContextType }) => {
   const { id, nome, telefone, email, logout } = user;
@@ -20,10 +21,9 @@ const MeuPerfilTab = ({ user }: { user: UserContextType }) => {
           Email: {email}
         </div>
       </div>
-      <div className="flex">
-        <Button className="mx-auto bg-warning text-warning-content" onClick={logout}>
-          Logout
-        </Button>
+      <div className="flex justify-center gap-5">
+        <EditPerfil>Editar</EditPerfil>
+        <LogoutConfirm onClick={logout}>Sair</LogoutConfirm>
       </div>
     </>
   );
