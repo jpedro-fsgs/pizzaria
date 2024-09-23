@@ -5,9 +5,9 @@ from app.security import get_hashed_senha, criar_token_acesso
 from database.schema import Usuario, get_session, Session
 from fastapi import APIRouter, Depends, HTTPException, status
 from models import CadastroUsuario, UsuarioResponse, UsuarioResponseToken
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy.orm.attributes import flag_modified
 
-from models.usuarios import UpdateUsuario
+from models.usuarios import Endereco, UpdateEndereco, UpdateUsuario
 from routes.auth import get_current_usuario
 
 
@@ -39,30 +39,21 @@ async def cadastrar_usuario(
 ):
     if session.query(Usuario).filter(Usuario.email == usuario_input.email).first():
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email já cadastrado")
-    try:
-        usuario = Usuario(
-            nome=usuario_input.nome,
-            telefone=usuario_input.telefone,
-            endereco=usuario_input.endereco.model_dump(),
-            email=usuario_input.email,
-            hashed_senha=get_hashed_senha(usuario_input.senha),
-        )
-        session.add(usuario)
-        session.commit()
 
-        # Gerar o token após o usuário ser salvo com sucesso
-        token = criar_token_acesso(
-            usuario.email, usuario.id, usuario.adm, timedelta(minutes=20)
-        )
-    except IntegrityError:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email já cadastrado")
-    except SQLAlchemyError as e:
-        session.rollback()
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-    finally:
-        session.close()
+    usuario = Usuario(
+        nome=usuario_input.nome,
+        telefone=usuario_input.telefone,
+        endereco=usuario_input.endereco.model_dump(),
+        email=usuario_input.email,
+        hashed_senha=get_hashed_senha(usuario_input.senha),
+    )
+    session.add(usuario)
+    session.commit()
+
+    # Gerar o token após o usuário ser salvo com sucesso
+    token = criar_token_acesso(
+        usuario.email, usuario.id, usuario.adm, timedelta(minutes=20)
+    )
 
     return UsuarioResponseToken(
         id=usuario.id,
@@ -86,17 +77,15 @@ async def editar_usuario(
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email já cadastrado")
 
     usuario = session.query(Usuario).get(user["id"])
-
+    
     if usuario_update.nome:
         usuario.nome = usuario_update.nome
     if usuario_update.telefone:
         usuario.telefone = usuario_update.telefone
-    if usuario_update.endereco:
-        usuario.endereco = usuario_update.endereco.model_dump()
     if usuario_update.email:
         usuario.email = usuario_update.email
     if usuario_update.senha:
-        usuario.senha = get_hashed_senha(usuario_update.senha)
+        usuario.hashed_senha = get_hashed_senha(usuario_update.senha)
 
     session.add(usuario)
     session.commit()
@@ -109,6 +98,33 @@ async def editar_usuario(
         email=usuario.email,
         adm=usuario.adm
     )
+
+@router.put("/editar-endereco/", response_model=Endereco)
+async def editar_endereco(
+    endereco_update: UpdateEndereco,
+    user: Annotated[dict, Depends(get_current_usuario)],
+    session: Session = Depends(get_session),
+):
+
+    usuario = session.query(Usuario).get(user["id"])
+
+    endereco = usuario.endereco
+
+    campos = ['rua', 'numero', 'complemento', 'bairro', 'cidade', 'estado', 'cep']
+
+    for campo in campos:
+        valor = getattr(endereco_update, campo)
+        if valor:
+           endereco[campo] = valor
+
+    usuario.endereco = endereco
+
+    flag_modified(usuario, "endereco")
+    session.add(usuario)
+
+    session.commit()
+
+    return endereco
 
 @router.delete("/deletar/", response_model=UsuarioResponse)
 async def deletar_usuario(
