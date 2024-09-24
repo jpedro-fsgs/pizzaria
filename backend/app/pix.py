@@ -1,10 +1,10 @@
 import crcmod
 
 class Payload():
-    def __init__(self, chavepix, valor):
+    def __init__(self, chavepix, txtId, valor, nome, cidade):
         self.chavepix = chavepix
         self.valor = valor
-        self.txtId = 'BorcellePizza'
+        self.txtId = txtId
 
         self.chavepix_tam = len(self.chavepix)
         self.txtId_tam = len(self.txtId)
@@ -21,8 +21,8 @@ class Payload():
         self.transactionCurrency = '5303986'
         self.transactionAmount = f'54{self.transactionAmount_tam}'
         self.countryCode = '5802BR'
-        self.merchantName = f'5900'
-        self.merchantCity = f'6000'
+        self.merchantName = f'59{len(nome):02}{nome}'
+        self.merchantCity = f'60{len(cidade):02}{cidade}'
         self.addDataField = f'62{len(self.addDataField_tam):02}{self.addDataField_tam}'
         self.crc16 = '6304'
 

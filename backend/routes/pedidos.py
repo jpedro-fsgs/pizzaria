@@ -2,7 +2,6 @@ import os
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import HTMLResponse
 from sqlalchemy import desc
 
 from app.email import criar_email, send_email
@@ -21,6 +20,9 @@ from routes.auth import get_current_usuario
 
 # Definição chave de pix
 CHAVE_PIX = os.environ.get("CHAVE_PIX")
+NOME_PIX = os.environ.get("NOME_PIX")
+CIDADE_PIX = os.environ.get("CIDADE_PIX")
+ID_PIX = os.environ.get("ID_PIX")
 
 # Verificação da validade da chave PIX
 if not CHAVE_PIX:
@@ -202,7 +204,7 @@ async def gerar_pix(pedido_id: int, session: Session = Depends(get_session)):
             status_code=status.HTTP_404_NOT_FOUND, detail="Pedido não encontrado"
         )
 
-    payload_pix = Payload(CHAVE_PIX, pedido.total).gerarPayload()
+    payload_pix = Payload(CHAVE_PIX, ID_PIX, pedido.total, NOME_PIX, CIDADE_PIX).gerarPayload()
 
     return PayloadPix(payload=payload_pix)
 
