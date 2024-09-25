@@ -125,7 +125,7 @@ def criar_email(pedido: PedidoResponse, chave_pix: str):
                     </div>
                 </div>
                 <div class="footer">
-                    <p>Agradecemos por escolher a nossa pizzaria!</p>
+                    <p>Esta pizzaria é fictícia. O pagamento não terá efeito.</p>
                 </div>
             </div>
         </body>

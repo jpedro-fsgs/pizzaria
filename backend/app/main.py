@@ -29,8 +29,8 @@ routers = [
     (categorias_router, '/categorias', ['Categorias']),
     (produtos_router, '/produtos', ['Produtos']),
     (pedidos_router, '/pedidos', ['Pedidos']),
-    (auth_router, '/auth', ['Auth']),
     (admin_router, '/admin', ['Admin']),
+    (auth_router, '/auth', ['Auth']),
 ]
 
 for router, prefix, tags in routers:
