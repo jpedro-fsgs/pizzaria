@@ -33,7 +33,7 @@ export interface UserContextType {
   logout: () => void;
 }
 
-interface UserType {
+export interface UserType {
   id: number;
   nome: string;
   telefone: string;
