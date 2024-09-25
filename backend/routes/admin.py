@@ -136,3 +136,32 @@ async def set_administrador(
         email=adm.email,
         adm=adm.adm,
     )
+
+@router.post("/remove-adm/{id}/")
+async def remove_administrador(
+    id: int,
+    user: Annotated[dict, Depends(get_current_usuario)],
+    session: Session = Depends(get_session),
+):
+
+    if not user["is_adm"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Não autorizado"
+        )
+    
+    adm = session.query(Usuario).get(id)
+
+    if not adm.adm:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Usuário não é administrador")
+    
+    adm.adm = False
+    session.commit()
+
+    return UsuarioResponse(
+        id=adm.id,
+        nome=adm.nome,
+        telefone=adm.telefone,
+        endereco=adm.endereco,
+        email=adm.email,
+        adm=adm.adm,
+    )
