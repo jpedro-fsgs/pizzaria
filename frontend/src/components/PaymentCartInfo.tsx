@@ -47,7 +47,7 @@ const PaymentCartInfo = () => {
         <h2 className="text-3xl text-left">Total:</h2>
         <h2 className="text-2xl text-center">R$ {pedidoAtual.total.toFixed(2)}</h2>
           <PixModal pedido={pedidoAtual}>
-            <a className="text-secondary h-fit p-2 bg-primary btn btn-md"><FaPix size={32} />Efetuar Pagamento</a>
+            <button className="text-secondary h-fit p-2 bg-primary btn btn-md"><FaPix size={32} />Efetuar Pagamento</button>
           </PixModal>
         </div>
       </div>
